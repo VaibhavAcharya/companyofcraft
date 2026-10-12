@@ -1,6 +1,35 @@
-# companyofcraft
+<p align="center">
+  <a href="https://companyofcraft.com">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="public/logos/mark-dark.svg">
+      <img alt="Company of Craft" src="public/logos/mark.svg" height="120">
+    </picture>
+  </a>
+</p>
 
-Website for Company of Craft, the software company behind [stateofpixel](https://stateofpixel.com). Served at [companyofcraft.com](https://companyofcraft.com) from Netlify.
+<h1 align="center">Company of Craft</h1>
+
+<p align="center">Well-made software.</p>
+
+<p align="center">
+  <a href="https://companyofcraft.com">Website</a> |
+  <a href="https://stateofpixel.com">stateofpixel</a> |
+  <a href="mailto:hello@companyofcraft.com">hello@companyofcraft.com</a>
+</p>
+
+<p align="center">
+  <a href="https://app.netlify.com/projects/companyofcraft/deploys"><img alt="Netlify status" src="https://api.netlify.com/api/v1/badges/7d15c80e-ba14-4b43-abda-a96b8a994603/deploy-status"></a>
+</p>
+
+Company of Craft builds [stateofpixel](https://stateofpixel.com). Founded by [Vaibhav Acharya](https://vaibhavacharya.com). This repository is the website at [companyofcraft.com](https://companyofcraft.com), served from Netlify.
+
+## Products
+
+| | Product | What it does |
+|---|---|---|
+| <img src="public/logos/stateofpixel.svg" alt="" width="24"> | [stateofpixel](https://stateofpixel.com) | Catches UI regressions before they merge. [Source](https://github.com/VaibhavAcharya/stateofpixel) |
+
+## The site
 
 Plain HTML and CSS built with [Vite](https://vite.dev). The page ships no JavaScript.
 
