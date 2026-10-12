@@ -1,6 +1,6 @@
 # Company of Craft
 
-> Well-made software. Company of Craft is a software company founded in 2026 by Vaibhav Acharya.
+> Well-made software. Company of Craft builds stateofpixel. Founded by Vaibhav Acharya.
 
 ## Products
 

@@ -58,7 +58,7 @@ footer {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
   gap: 0.5em 1.5em;
   padding-top: 3em;
   font-size: 0.8em;
@@ -100,6 +100,10 @@ h1 a:hover {
 }
 
 .lines span + span {
+  margin-top: 0.35em;
+}
+
+footer div p + p {
   margin-top: 0.35em;
 }
 
