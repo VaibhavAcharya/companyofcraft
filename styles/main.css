@@ -1,0 +1,143 @@
+@import "@fontsource-variable/ibm-plex-sans/standard.css";
+
+:root {
+  color-scheme: light dark;
+  --color-bg: light-dark(#fafafa, #0a0a0a);
+  --color-fg: light-dark(#171717, #ededed);
+  --color-muted: light-dark(#666666, #a1a1a1);
+  --color-chip: light-dark(rgb(0 0 0 / 0.05), rgb(255 255 255 / 0.08));
+  --color-chip-hover: light-dark(rgb(0 0 0 / 0.1), rgb(255 255 255 / 0.15));
+  --sans: "IBM Plex Sans Variable", ui-sans-serif, system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  padding: 48px 20px 20px;
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+  font: 400 clamp(17px, 1.2vw + 12px, 21px) / 1.6 var(--sans);
+  letter-spacing: -0.01em;
+}
+
+main,
+footer {
+  width: 100%;
+  max-width: 40rem;
+  justify-self: center;
+}
+
+main {
+  align-self: center;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2em;
+  align-items: start;
+}
+
+.mark {
+  display: block;
+  width: 6em;
+  height: auto;
+}
+
+footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5em 1.5em;
+  padding-top: 3em;
+  font-size: 0.8em;
+  color: var(--color-muted);
+}
+
+h1,
+p {
+  margin: 0;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+h1 {
+  font-weight: 600;
+}
+
+h1 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1 a:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+.tagline {
+  color: var(--color-muted);
+}
+
+.lines {
+  margin-top: 1.4em;
+}
+
+.lines span {
+  display: block;
+}
+
+.lines span + span {
+  margin-top: 0.35em;
+}
+
+.chip {
+  display: inline-block;
+  padding: 0 0.4em;
+  border-radius: 0.35em;
+  background: var(--color-chip);
+  color: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 150ms;
+}
+
+.chip:hover {
+  background: var(--color-chip-hover);
+}
+
+.chip:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.chip img {
+  width: 0.85em;
+  height: 0.85em;
+  margin-right: 0.35em;
+  vertical-align: -0.1em;
+}
+
+@media (max-width: 600px) {
+  main {
+    grid-template-columns: 1fr;
+    gap: 1.5em;
+  }
+}
+
+::selection {
+  background: var(--color-fg);
+  color: var(--color-bg);
+}

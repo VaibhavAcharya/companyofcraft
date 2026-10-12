@@ -1,0 +1,12 @@
+# Company of Craft
+
+> Well-made software. Company of Craft is a software company founded in 2026 by Vaibhav Acharya.
+
+## Products
+
+- [stateofpixel](https://stateofpixel.com): Catch UI regressions before they merge.
+
+## Contact
+
+- [hello@companyofcraft.com](mailto:hello@companyofcraft.com)
+- [Vaibhav Acharya](https://vaibhavacharya.com)
