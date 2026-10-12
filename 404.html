@@ -6,13 +6,19 @@
     <title>Not found | Company of Craft</title>
     <meta name="robots" content="noindex" />
     <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" href="/logos/mark.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/logos/apple-touch-icon.png" />
     <link rel="stylesheet" href="/styles/main.css" />
   </head>
   <body>
     <main>
-      <img class="mark" src="/logos/mark.svg" alt="" width="200" height="200" />
+      <picture>
+        <source srcset="/logos/mark-dark.svg" media="(prefers-color-scheme: dark)" />
+        <img class="mark" src="/logos/mark.svg" alt="" width="200" height="200" />
+      </picture>
       <div>
         <h1><a href="/">Company of Craft</a></h1>
         <p class="tagline">This page does not exist.</p>
@@ -22,7 +28,10 @@
       </div>
     </main>
     <footer>
-      <p>&copy; 2026 Company of Craft</p>
+      <div>
+        <p>Founded by <a class="chip" href="https://vaibhavacharya.com" target="_blank" rel="noopener"><img src="/logos/vaibhavacharya.svg" alt="" width="18" height="18" />Vaibhav Acharya</a></p>
+        <p>&copy; 2026 Company of Craft</p>
+      </div>
       <p><a class="chip" href="mailto:hello@companyofcraft.com">hello@companyofcraft.com</a></p>
     </footer>
   </body>

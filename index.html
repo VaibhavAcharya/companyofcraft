@@ -61,7 +61,10 @@
   </head>
   <body>
     <main>
-      <img class="mark" src="/logos/mark.svg" alt="" width="200" height="200" />
+      <picture>
+        <source srcset="/logos/mark-dark.svg" media="(prefers-color-scheme: dark)" />
+        <img class="mark" src="/logos/mark.svg" alt="" width="200" height="200" />
+      </picture>
       <div>
         <h1><a href="/">Company of Craft</a></h1>
         <p class="tagline">Well-made software.</p>
