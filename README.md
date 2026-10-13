@@ -41,7 +41,7 @@ Plain HTML and CSS built with [Vite](https://vite.dev). The page ships no JavaSc
 | `styles/main.css` | All styles. IBM Plex Sans comes from `@fontsource-variable/ibm-plex-sans`, the same font as stateofpixel |
 | `public/logos` | `mark.svg` (black on white, also the favicon), `mark-dark.svg` (white on black), PNG exports, logos of linked sites |
 | `public` | `robots.txt`, `llms.txt`, `favicon.ico` and `.well-known/security.txt`, served from the site root |
-| `scripts/postbuild.ts` | Writes the Open Graph image to `dist/og/index.png` and `dist/sitemap.xml`, with `lastmod` from git |
+| `scripts/postbuild.ts` | Writes the Open Graph image to `dist/og/index.png`, the X banner to `dist/og/x-banner.png` and `dist/sitemap.xml`, with `lastmod` from git |
 | `vite.config.ts` | Build inputs and the page Content Security Policy |
 | `netlify.toml` | Build settings and security headers |
 
