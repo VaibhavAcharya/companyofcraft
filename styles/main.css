@@ -107,6 +107,10 @@ footer div p + p {
   margin-top: 0.35em;
 }
 
+footer div + div {
+  text-align: right;
+}
+
 .chip {
   display: inline-block;
   padding: 0 0.4em;

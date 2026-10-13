@@ -14,7 +14,8 @@
 <p align="center">
   <a href="https://companyofcraft.com">Website</a> |
   <a href="https://stateofpixel.com">stateofpixel</a> |
-  <a href="mailto:hello@companyofcraft.com">hello@companyofcraft.com</a>
+  <a href="mailto:hello@companyofcraft.com">hello@companyofcraft.com</a> |
+  <a href="https://x.com/CompanyofCraft">@CompanyofCraft</a>
 </p>
 
 <p align="center">
