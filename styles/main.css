@@ -142,6 +142,20 @@ footer div + div {
   main {
     grid-template-columns: 1fr;
     gap: 1.5em;
+    justify-items: center;
+    text-align: center;
+  }
+
+  footer {
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
+    text-align: center;
+  }
+
+  footer div + div {
+    order: -1;
+    text-align: center;
   }
 }
 
