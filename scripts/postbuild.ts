@@ -9,6 +9,8 @@ const SITE_URL = "https://companyofcraft.com";
 const OUT_DIR = "dist";
 const WIDTH = 1200;
 const HEIGHT = 630;
+const X_BANNER_WIDTH = 1500;
+const X_BANNER_HEIGHT = 500;
 
 const PAGES = [
   {
@@ -50,12 +52,28 @@ function ogImagePath(path: string): string {
   return path === "/" ? "/og/index.png" : `/og${path}.png`;
 }
 
-async function renderOgImage(page: (typeof PAGES)[number]): Promise<Buffer> {
-  const [regular, semibold, mark] = await Promise.all([
+async function renderPng(
+  card: Node,
+  width: number,
+  height: number,
+): Promise<Buffer> {
+  const [regular, semibold] = await Promise.all([
     font("@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff"),
     font("@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-600-normal.woff"),
-    dataUri("public/logos/mark-dark.svg", "image/svg+xml"),
   ]);
+  const svg = await satori(card as never, {
+    width,
+    height,
+    fonts: [
+      { name: "IBM Plex Sans", data: regular, weight: 400 },
+      { name: "IBM Plex Sans", data: semibold, weight: 600 },
+    ],
+  });
+  return new Resvg(svg).render().asPng();
+}
+
+async function renderOgImage(page: (typeof PAGES)[number]): Promise<Buffer> {
+  const mark = await dataUri("public/logos/mark-dark.svg", "image/svg+xml");
   const card = h(
     "div",
     {
@@ -85,15 +103,42 @@ async function renderOgImage(page: (typeof PAGES)[number]): Promise<Buffer> {
       h("div", { marginTop: 8, fontSize: 32, color: "#a1a1a1" }, page.tagline),
     ],
   );
-  const svg = await satori(card as never, {
-    width: WIDTH,
-    height: HEIGHT,
-    fonts: [
-      { name: "IBM Plex Sans", data: regular, weight: 400 },
-      { name: "IBM Plex Sans", data: semibold, weight: 600 },
+  return renderPng(card, WIDTH, HEIGHT);
+}
+
+async function renderXBanner(): Promise<Buffer> {
+  const mark = await dataUri("public/logos/mark-dark.svg", "image/svg+xml");
+  const banner = h(
+    "div",
+    {
+      width: X_BANNER_WIDTH,
+      height: X_BANNER_HEIGHT,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 48,
+      background: "#0a0a0a",
+      fontFamily: "IBM Plex Sans",
+      color: "#ededed",
+      letterSpacing: "-0.02em",
+    },
+    [
+      image(mark, { width: 200, height: 200 }),
+      h("div", { display: "flex", flexDirection: "column" }, [
+        h(
+          "div",
+          { fontSize: 60, fontWeight: 600, letterSpacing: "-0.03em" },
+          PAGES[0].title,
+        ),
+        h(
+          "div",
+          { marginTop: 4, fontSize: 32, color: "#a1a1a1" },
+          PAGES[0].tagline,
+        ),
+      ]),
     ],
-  });
-  return new Resvg(svg).render().asPng();
+  );
+  return renderPng(banner, X_BANNER_WIDTH, X_BANNER_HEIGHT);
 }
 
 function lastModified(sources: string[]): string | undefined {
@@ -129,6 +174,9 @@ for (const page of PAGES) {
   await writeFile(file, await renderOgImage(page));
 }
 console.log(`Wrote ${PAGES.length} Open Graph images to ${OUT_DIR}/og`);
+
+await writeFile(join(OUT_DIR, "og/x-banner.png"), await renderXBanner());
+console.log(`Wrote the X banner to ${OUT_DIR}/og/x-banner.png`);
 
 await writeFile(join(OUT_DIR, "sitemap.xml"), sitemap());
 console.log(`Wrote ${PAGES.length} URLs to ${OUT_DIR}/sitemap.xml`);
