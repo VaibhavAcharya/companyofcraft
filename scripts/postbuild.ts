@@ -54,7 +54,7 @@ async function renderOgImage(page: (typeof PAGES)[number]): Promise<Buffer> {
   const [regular, semibold, mark] = await Promise.all([
     font("@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff"),
     font("@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-600-normal.woff"),
-    dataUri("public/logos/mark.svg", "image/svg+xml"),
+    dataUri("public/logos/mark-dark.svg", "image/svg+xml"),
   ]);
   const card = h(
     "div",
@@ -62,28 +62,27 @@ async function renderOgImage(page: (typeof PAGES)[number]): Promise<Buffer> {
       width: WIDTH,
       height: HEIGHT,
       display: "flex",
+      flexDirection: "column",
       alignItems: "center",
-      gap: 72,
-      padding: "0 96px",
-      background: "#ffffff",
+      justifyContent: "center",
+      background: "#0a0a0a",
       fontFamily: "IBM Plex Sans",
-      color: "#000000",
+      color: "#ededed",
+      letterSpacing: "-0.02em",
     },
     [
-      image(mark, { width: 400, height: 400 }),
-      h("div", { display: "flex", flexDirection: "column", gap: 16 }, [
-        h(
-          "div",
-          {
-            fontSize: 64,
-            fontWeight: 600,
-            lineHeight: 1.1,
-            letterSpacing: "-0.03em",
-          },
-          page.title,
-        ),
-        h("div", { fontSize: 32, color: "#666666" }, page.tagline),
-      ]),
+      image(mark, { width: 260, height: 260 }),
+      h(
+        "div",
+        {
+          marginTop: 40,
+          fontSize: 60,
+          fontWeight: 600,
+          letterSpacing: "-0.03em",
+        },
+        page.title,
+      ),
+      h("div", { marginTop: 8, fontSize: 32, color: "#a1a1a1" }, page.tagline),
     ],
   );
   const svg = await satori(card as never, {
