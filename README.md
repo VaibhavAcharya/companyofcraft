@@ -44,6 +44,21 @@ Plain HTML and CSS built with [Vite](https://vite.dev). The page ships no JavaSc
 | `scripts/postbuild.ts` | Writes the Open Graph image to `dist/og/index.png`, the X banner to `dist/og/x-banner.png` and `dist/sitemap.xml`, with `lastmod` from git |
 | `vite.config.ts` | Build inputs and the page Content Security Policy |
 | `netlify.toml` | Build settings and security headers |
+| `netlify/functions/notify.ts` | Private API at `/api/notify` that sends Telegram notifications |
+
+## Notify API
+
+Projects call `POST /api/notify` to send a Telegram message. Requests need `Authorization: Bearer $NOTIFY_API_KEY`.
+
+```sh
+curl -X POST https://companyofcraft.com/api/notify \
+  -H "Authorization: Bearer $NOTIFY_API_KEY" \
+  -d '{"project":"stateofpixel","title":"New signup","message":"someone@example.com","link":"https://stateofpixel.com"}'
+```
+
+`project` and `message` are required. `title` and `link` are optional. The same message from the same project is dropped for 10 minutes (`deduped`), and each project can send 30 messages per hour (`429`). `GET /api/notify?limit=50` returns the latest sent notifications, newest first. State lives in the `notify` Netlify Blobs store.
+
+Environment variables: `NOTIFY_API_KEY`, `TELEGRAM_BOT_TOKEN` (from @BotFather) and `TELEGRAM_CHAT_ID` (your chat with the bot).
 
 ## Development
 
