@@ -45,6 +45,8 @@ Plain HTML and CSS built with [Vite](https://vite.dev). The page ships no JavaSc
 | `vite.config.ts` | Build inputs and the page Content Security Policy |
 | `netlify.toml` | Build settings and security headers |
 | `netlify/functions/notify.ts` | Private API at `/api/notify` that sends Telegram notifications |
+| `visual/home.visual.ts`, `playwright.config.ts` | Screenshots of the page, light and dark at 1280px and 375px, for [stateofpixel](https://stateofpixel.com) |
+| `.github/workflows/visual.yml` | Takes the screenshots on pushes to `main` and on pull requests, and uploads them to stateofpixel |
 
 ## Notify API
 
@@ -67,6 +69,7 @@ pnpm install
 pnpm dev      # Vite dev server on localhost:5173
 pnpm build    # dist/, then the Open Graph image and sitemap
 pnpm lint     # Biome
+pnpm visual   # Screenshots to stateofpixel-screenshots/, uploaded on CI only
 ```
 
 The Content Security Policy for pages is added to the built HTML as a `<meta>` tag by `vite.config.ts`, so it covers pages only and not files like `sitemap.xml`. `netlify.toml` sends `frame-ancestors`, which only works as a header. To check the built site with its headers, run `pnpm build` and then `netlify serve`.
