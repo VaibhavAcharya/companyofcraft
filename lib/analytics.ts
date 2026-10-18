@@ -17,7 +17,7 @@ export function trackFaqOpens(tool: string) {
     details.addEventListener("toggle", () => {
       if (details.open) {
         const question = details.querySelector("summary")?.textContent ?? "";
-        track("faq-open", { tool, question });
+        track("FAQ open", { tool, question });
       }
     });
   }

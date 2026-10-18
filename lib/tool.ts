@@ -38,15 +38,15 @@ async function load<Result>(
 ): Promise<Result> {
   const response = await fetch(`${api}?${new URLSearchParams({ url })}`);
   if (response.status === 429) {
-    track("lookup", { tool, url, result: "rate-limited" });
+    track("Lookup", { tool, url, result: "rate-limited" });
     throw new Error(tooMany);
   }
   const body = await response.json().catch(() => null);
   if (!response.ok || body === null) {
-    track("lookup", { tool, url, result: "error" });
+    track("Lookup", { tool, url, result: "error" });
     throw new Error(body?.error ?? "Could not load that page.");
   }
-  track("lookup", { tool, url, result: "ok" });
+  track("Lookup", { tool, url, result: "ok" });
   return body;
 }
 
@@ -68,7 +68,7 @@ export function fetched(tool: string, status: number, url: string) {
   link.href = url;
   link.rel = "noopener nofollow";
   link.target = "_blank";
-  link.addEventListener("click", () => track("result-link", { tool }));
+  link.addEventListener("click", () => track("Result link", { tool }));
   return el("p", "fetched", [`${status} `, link]);
 }
 
