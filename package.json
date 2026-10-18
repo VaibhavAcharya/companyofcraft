@@ -24,8 +24,12 @@
     "@netlify/functions": "6.0.2",
     "@playwright/test": "1.64.1",
     "@resvg/resvg-js": "^2.6.2",
+    "rehype-parse": "^9.0.1",
+    "rehype-remark": "^10.0.1",
+    "remark-stringify": "^11.0.0",
     "satori": "^0.33.5",
     "stateofpixel": "1.8.0",
+    "unified": "^11.0.5",
     "vite": "^8.3.0"
   }
 }

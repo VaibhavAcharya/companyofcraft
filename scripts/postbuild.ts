@@ -4,6 +4,7 @@ import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
 import { Resvg } from "@resvg/resvg-js";
 import satori from "satori";
+import { markdownPath, pageMarkdown } from "./markdown.ts";
 
 const SITE_URL = "https://companyofcraft.com";
 const OUT_DIR = "dist";
@@ -18,6 +19,12 @@ const PAGES = [
     title: "Company of Craft",
     tagline: "Well-made software.",
     sources: ["index.html", "styles/main.css"],
+  },
+  {
+    path: "/og-preview/",
+    title: "Open Graph preview and checker",
+    tagline: "See how a link looks on X, LinkedIn, Slack and Discord.",
+    sources: ["og-preview", "styles/og-preview.css"],
   },
 ];
 
@@ -49,7 +56,7 @@ async function dataUri(file: string, type: string): Promise<string> {
 }
 
 function ogImagePath(path: string): string {
-  return path === "/" ? "/og/index.png" : `/og${path}.png`;
+  return path === "/" ? "/og/index.png" : `/og${path.replace(/\/$/, "")}.png`;
 }
 
 async function renderPng(
@@ -177,6 +184,14 @@ console.log(`Wrote ${PAGES.length} Open Graph images to ${OUT_DIR}/og`);
 
 await writeFile(join(OUT_DIR, "og/x-banner.png"), await renderXBanner());
 console.log(`Wrote the X banner to ${OUT_DIR}/og/x-banner.png`);
+
+for (const page of PAGES) {
+  await writeFile(
+    join(OUT_DIR, markdownPath(page.path)),
+    await pageMarkdown(page.path),
+  );
+}
+console.log(`Wrote ${PAGES.length} Markdown pages to ${OUT_DIR}`);
 
 await writeFile(join(OUT_DIR, "sitemap.xml"), sitemap());
 console.log(`Wrote ${PAGES.length} URLs to ${OUT_DIR}/sitemap.xml`);

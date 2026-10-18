@@ -2,9 +2,15 @@
 
 > Well-made software. Company of Craft builds stateofpixel. Founded by Vaibhav Acharya.
 
+Every page below is also on the site as HTML, at the same address without `.md`.
+
 ## Products
 
-- [stateofpixel](https://stateofpixel.com): Catch UI regressions before they merge.
+- [stateofpixel](https://stateofpixel.com/index.md): Catch UI regressions before they merge.
+
+## Small free tools
+
+- [Open Graph preview](https://companyofcraft.com/og-preview.md): See how a link looks when you share it on X, LinkedIn, Slack and Discord, and check its Open Graph and Twitter tags.
 
 ## Contact
 

@@ -30,18 +30,27 @@ Company of Craft builds [stateofpixel](https://stateofpixel.com). Founded by [Va
 |---|---|---|
 | <img src="public/logos/stateofpixel.svg" alt="" width="24"> | [stateofpixel](https://stateofpixel.com) | Catches UI regressions before they merge. [Source](https://github.com/VaibhavAcharya/stateofpixel) |
 
+## Small free tools
+
+| Tool | What it does |
+|---|---|
+| [Open Graph preview](https://companyofcraft.com/og-preview/) | Shows how a link looks on X, LinkedIn, Slack and Discord, and checks its Open Graph and Twitter tags |
+
 ## The site
 
-Plain HTML and CSS built with [Vite](https://vite.dev). The page ships no JavaScript.
+Plain HTML and CSS built with [Vite](https://vite.dev). The home page ships no JavaScript. The Open Graph preview page loads one script.
 
 | Path | What it is |
 |---|---|
 | `index.html` | The site |
 | `404.html` | Served by Netlify for unknown paths |
+| `og-preview/index.html`, `og-preview/main.ts`, `styles/og-preview.css` | The Open Graph preview tool. The script reads `?url=` and calls `/api/og-preview` |
+| `netlify/functions/og-preview.ts` | Public API at `/api/og-preview?url=` that fetches a page and returns its tags, the preview fields and the checks. It refuses private addresses, follows up to 5 redirects and is rate limited to 30 requests a minute per IP |
 | `styles/main.css` | All styles. IBM Plex Sans comes from `@fontsource-variable/ibm-plex-sans`, the same font as stateofpixel |
 | `public/logos` | `mark.svg` (black on white, also the favicon), `mark-dark.svg` (white on black), PNG exports, logos of linked sites |
 | `public` | `robots.txt`, `llms.txt`, `favicon.ico` and `.well-known/security.txt`, served from the site root |
-| `scripts/postbuild.ts` | Writes the Open Graph image to `dist/og/index.png`, the X banner to `dist/og/x-banner.png` and `dist/sitemap.xml`, with `lastmod` from git |
+| `scripts/postbuild.ts` | Writes an Open Graph image per page to `dist/og/`, the X banner to `dist/og/x-banner.png`, a Markdown copy of each page (`dist/index.md`, `dist/og-preview.md`) and `dist/sitemap.xml`, with `lastmod` from git |
+| `scripts/markdown.ts` | Turns the `<main>` of a page into Markdown. Used by the build and by `pnpm dev`, which serves the same `.md` paths |
 | `vite.config.ts` | Build inputs and the page Content Security Policy |
 | `netlify.toml` | Build settings and security headers |
 | `netlify/functions/notify.ts` | Private API at `/api/notify` that sends Telegram notifications |

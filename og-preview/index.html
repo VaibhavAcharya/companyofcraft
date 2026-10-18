@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Open Graph preview and checker / Company of Craft</title>
+    <meta name="description" content="See how a link looks when you share it on X, LinkedIn, Slack and Discord, and check its Open Graph and Twitter tags. Free, no sign-up." />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+    <link rel="canonical" href="https://companyofcraft.com/og-preview/" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/logos/mark.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/logos/apple-touch-icon.png" />
+    <link rel="stylesheet" href="/styles/main.css" />
+    <link rel="stylesheet" href="/styles/og-preview.css" />
+
+    <meta property="og:site_name" content="Company of Craft" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Open Graph preview and checker" />
+    <meta property="og:description" content="See how a link looks when you share it on X, LinkedIn, Slack and Discord." />
+    <meta property="og:url" content="https://companyofcraft.com/og-preview/" />
+    <meta property="og:image" content="https://companyofcraft.com/og/og-preview.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Open Graph preview by Company of Craft." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@CompanyofCraft" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Open Graph preview",
+        "url": "https://companyofcraft.com/og-preview/",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "offers": { "@type": "Offer", "price": "0" },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Company of Craft",
+          "url": "https://companyofcraft.com/"
+        }
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What are Open Graph tags?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Meta tags in the head of a page, like og:title, og:description, og:image and og:url. Chat apps and social networks read them to build the preview card when someone shares the link. X also reads twitter: tags and uses the og: tags when they are missing."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Why does my link still show the old preview?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Platforms cache a preview after the first time someone shares a link. LinkedIn has a Post Inspector that fetches the page again. The others update when their cache expires."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What size should the og:image be?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "1200x630 pixels is the common size. It has the 1.91:1 shape of the large cards on X and LinkedIn, so nothing gets cropped. Keep the file under 5 MB."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Why does my image not show up?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Check that og:image is a full URL that starts with https://, that the image loads without signing in, and that the server sends it with an image content type. The checks above test the last two."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Are the links I check saved?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. The page and its image are fetched when you press Preview, and nothing is stored."
+            }
+          }
+        ]
+      }
+    </script>
+    <script type="module" src="/og-preview/main.ts"></script>
+  </head>
+  <body class="tool">
+    <main>
+      <header>
+        <nav>
+          <a class="home" href="/">
+            <picture>
+              <source srcset="/logos/mark-dark.svg" media="(prefers-color-scheme: dark)" />
+              <img src="/logos/mark.svg" alt="" width="24" height="24" />
+            </picture>
+            Company of Craft
+          </a>
+        </nav>
+        <h1>Open Graph preview</h1>
+        <p class="tagline">See how a link looks when you share it on X, LinkedIn, Slack and Discord.</p>
+      </header>
+
+      <form class="lookup" method="get" action="/og-preview/">
+        <label class="visually-hidden" for="url">Link</label>
+        <input id="url" name="url" type="text" inputmode="url" autocomplete="url" placeholder="example.com" required />
+        <button type="submit">Preview</button>
+      </form>
+
+      <p class="status" role="status" aria-live="polite"></p>
+      <div class="results" hidden></div>
+
+      <section class="faq">
+        <h2>Questions</h2>
+        <details>
+          <summary>What are Open Graph tags?</summary>
+          <p>Meta tags in the head of a page, like og:title, og:description, og:image and og:url. Chat apps and social networks read them to build the preview card when someone shares the link. X also reads twitter: tags and uses the og: tags when they are missing.</p>
+        </details>
+        <details>
+          <summary>Why does my link still show the old preview?</summary>
+          <p>Platforms cache a preview after the first time someone shares a link. LinkedIn has a Post Inspector that fetches the page again. The others update when their cache expires.</p>
+        </details>
+        <details>
+          <summary>What size should the og:image be?</summary>
+          <p>1200x630 pixels is the common size. It has the 1.91:1 shape of the large cards on X and LinkedIn, so nothing gets cropped. Keep the file under 5 MB.</p>
+        </details>
+        <details>
+          <summary>Why does my image not show up?</summary>
+          <p>Check that og:image is a full URL that starts with https://, that the image loads without signing in, and that the server sends it with an image content type. The checks above test the last two.</p>
+        </details>
+        <details>
+          <summary>Are the links I check saved?</summary>
+          <p>No. The page and its image are fetched when you press Preview, and nothing is stored.</p>
+        </details>
+      </section>
+
+      <section class="about">
+        <h2>How it works</h2>
+        <p>The page at the link is fetched from our server, the same way a chat app or social network does when someone pastes a link. It reads the <code>og:</code> and <code>twitter:</code> tags, falls back to the page title and description like the platforms do, and checks that the image loads.</p>
+        <p>The previews are close to what each platform shows, but each one can change its layout or cache an older version of the page.</p>
+        <p>Company of Craft also builds <a class="chip" href="https://stateofpixel.com" target="_blank" rel="noopener"><img src="/logos/stateofpixel.svg" alt="" width="18" height="18" />stateofpixel</a>, which catches UI regressions before they merge.</p>
+      </section>
+    </main>
+    <footer>
+      <div>
+        <p>Founded by <a class="chip" href="https://vaibhavacharya.com" target="_blank" rel="noopener"><img src="/logos/vaibhavacharya.svg" alt="" width="18" height="18" />Vaibhav Acharya</a></p>
+        <p>&copy; 2026 Company of Craft</p>
+      </div>
+      <div>
+        <p><a class="chip" href="https://x.com/CompanyofCraft" target="_blank" rel="noopener"><img src="/logos/x.svg" alt="" width="18" height="18" />@CompanyofCraft</a></p>
+        <p><a class="chip" href="mailto:hello@companyofcraft.com">hello@companyofcraft.com</a></p>
+      </div>
+    </footer>
+  </body>
+</html>
