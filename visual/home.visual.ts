@@ -35,3 +35,10 @@ test("favicon checker", async ({ page }) => {
   await page.emulateMedia({ colorScheme: "dark" });
   await snapshot(page, "Favicon checker dark");
 });
+
+test("ip lookup", async ({ page }) => {
+  await page.goto("/ip-lookup");
+  await snapshot(page, "IP lookup");
+  await page.emulateMedia({ colorScheme: "dark" });
+  await snapshot(page, "IP lookup dark");
+});

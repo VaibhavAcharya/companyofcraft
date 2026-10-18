@@ -38,6 +38,7 @@ Company of Craft builds [stateofpixel](https://stateofpixel.com). Founded by [Va
 | [Security headers checker](https://companyofcraft.com/security-headers) | Checks the Content-Security-Policy, Strict-Transport-Security, framing, cookies and other security headers of a page |
 | [Agent readability checker](https://companyofcraft.com/agent-readability) | Checks if AI agents and crawlers can read a page: robots.txt rules per crawler, llms.txt, Markdown versions, sitemap and text without JavaScript |
 | [Favicon checker](https://companyofcraft.com/favicon-checker) | Checks the favicon, apple-touch-icon and web manifest of a page, and shows the browser tab and home screen |
+| [IP lookup](https://companyofcraft.com/ip-lookup) | Looks up an IP address: country, city, network, Tor and hosting checks, and whether a request comes from a search bot or an AI crawler |
 
 ## The site
 
@@ -47,18 +48,20 @@ Plain HTML and CSS built with [Vite](https://vite.dev). The home page ships no J
 |---|---|
 | `index.html` | The site |
 | `404.html` | Served by Netlify for unknown paths |
-| `og-preview.html`, `security-headers.html`, `agent-readability.html`, `favicon-checker.html` | The tool pages, served without `.html`. Each script in the folder of the same name, like `og-preview/main.ts`, reads `?url=` and calls the API of the same name under `/api/` |
+| `og-preview.html`, `security-headers.html`, `agent-readability.html`, `favicon-checker.html`, `ip-lookup.html` | The tool pages, served without `.html`. Each script in the folder of the same name, like `og-preview/main.ts`, reads `?url=` (`?ip=` for `ip-lookup`) and calls the API of the same name under `/api/` |
 | `lib/tool.ts` | Browser code the tool pages share: the lookup, the checks list and the definition lists |
 | `netlify/functions/og-preview.ts` | Public API at `/api/og-preview?url=` that fetches a page and returns its tags, the preview fields and the checks |
 | `netlify/functions/security-headers.ts` | Public API at `/api/security-headers?url=` that fetches a page, and its `http://` address, and checks the response headers and the Content-Security-Policy |
 | `netlify/functions/agent-readability.ts` | Public API at `/api/agent-readability?url=` that fetches a page with its `robots.txt`, `llms.txt`, `llms-full.txt`, sitemap and Markdown version |
 | `netlify/functions/favicon-checker.ts` | Public API at `/api/favicon-checker?url=` that fetches a page, its icons and its web manifest, and reads the icon sizes from the files |
-| `netlify/lib` | Server code the APIs share. Every fetch refuses private addresses and follows up to 5 redirects. Each API is rate limited to 30 requests a minute per IP |
+| `netlify/functions/ip-lookup.ts` | Public API at `/api/ip-lookup`. `GET` describes the calling request, or the request given by `?ip=` and `?ua=`. `POST` lets sites check their visitors: it takes an IP and request headers and returns a verdict. Rate limited to 600 requests a minute per IP |
+| `netlify/lib` | Server code the APIs share. `ip.ts` reads the network from Team Cymru, the Tor exit list, hosting networks and the IP ranges crawlers publish, and gives each request a verdict. Every fetch refuses private addresses and follows up to 5 redirects. Each API except `ip-lookup` is rate limited to 30 requests a minute per IP |
 | `styles/main.css` | Styles of every page. IBM Plex Sans comes from `@fontsource-variable/ibm-plex-sans`, the same font as stateofpixel |
-| `styles/tool.css`, `styles/og-preview.css`, `styles/favicon-checker.css` | Styles of the tool pages, and the previews of the two tools that have them |
+| `styles/tool.css`, `styles/og-preview.css`, `styles/favicon-checker.css`, `styles/ip-lookup.css` | Styles of the tool pages, and the parts only one tool has |
 | `public/logos` | `mark.svg` (black on white, also the favicon), `mark-dark.svg` (white on black), PNG exports, logos of linked sites |
 | `public` | `robots.txt`, `llms.txt`, `favicon.ico` and `.well-known/security.txt`, served from the site root |
 | `scripts/postbuild.ts` | Writes an Open Graph image per page to `dist/og/`, the X banner to `dist/og/x-banner.png`, a Markdown copy of each page (`dist/index.md`, `dist/og-preview.md` and so on) and `dist/sitemap.xml`, with `lastmod` from git |
+| `scripts/world-map.ts` | Writes the dotted world map of the IP lookup to `ip-lookup/world.ts`. Run it with the path of `ne_110m_admin_0_countries.geojson` from [Natural Earth](https://github.com/nvkelso/natural-earth-vector/tree/master/geojson) |
 | `scripts/markdown.ts` | Turns the `<main>` of a page into Markdown. Used by the build and by `pnpm dev`, which serves the same `.md` paths |
 | `vite.config.ts` | Build inputs and the page Content Security Policy |
 | `netlify.toml` | Build settings and security headers |

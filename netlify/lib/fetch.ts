@@ -54,7 +54,7 @@ async function assertPublicHost(hostname: string) {
   }
 }
 
-function isPrivateAddress(address: string) {
+export function isPrivateAddress(address: string) {
   const mapped = address.toLowerCase().match(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/);
   if (mapped) {
     return isPrivateAddress(mapped[1]);

@@ -14,6 +14,7 @@ Every page below is also on the site as HTML, at the same address without `.md`.
 - [Security headers checker](https://companyofcraft.com/security-headers.md): Check the Content-Security-Policy, Strict-Transport-Security and other security headers of a page.
 - [Agent readability checker](https://companyofcraft.com/agent-readability.md): Check if AI agents and crawlers can read a page: robots.txt rules per crawler, llms.txt, Markdown versions, sitemap and text without JavaScript.
 - [Favicon checker](https://companyofcraft.com/favicon-checker.md): Check the favicon, apple-touch-icon and web manifest of a page, with a preview of the browser tab and home screen.
+- [IP lookup](https://companyofcraft.com/ip-lookup.md): Look up an IP address: country, city, network, Tor and hosting checks, and whether a request comes from a search bot or an AI crawler. Sites can check their visitors with `POST /api/ip-lookup`, which returns a verdict: human, proxy, bot, ai_crawler, search_bot or spoofed_crawler.
 
 ## Contact
 

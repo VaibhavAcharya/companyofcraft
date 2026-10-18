@@ -9,6 +9,7 @@ const TOOL_PATHS = [
   "/security-headers.html",
   "/agent-readability.html",
   "/favicon-checker.html",
+  "/ip-lookup.html",
 ];
 
 const TOOL_CONTENT_SECURITY_POLICY =
@@ -58,6 +59,7 @@ export default defineConfig({
         securityHeaders: "security-headers.html",
         agentReadability: "agent-readability.html",
         faviconChecker: "favicon-checker.html",
+        ipLookup: "ip-lookup.html",
       },
     },
   },

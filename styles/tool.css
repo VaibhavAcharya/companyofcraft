@@ -235,7 +235,12 @@
   color: var(--color-fg);
 }
 
-.about p + p {
+.about p + p,
+.about .file {
+  margin-top: 0.75em;
+}
+
+.about .file + p {
   margin-top: 0.75em;
 }
 

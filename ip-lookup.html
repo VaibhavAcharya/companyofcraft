@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>IP lookup with VPN and bot check / Company of Craft</title>
+    <meta name="description" content="Look up any IP address: country, city, network, Tor and hosting checks, and whether the request comes from a search bot or an AI crawler. Free, no sign-up, with a JSON API." />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+    <link rel="canonical" href="https://companyofcraft.com/ip-lookup" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/logos/mark.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/logos/apple-touch-icon.png" />
+    <link rel="stylesheet" href="/styles/main.css" />
+    <link rel="stylesheet" href="/styles/tool.css" />
+    <link rel="stylesheet" href="/styles/ip-lookup.css" />
+
+    <meta property="og:site_name" content="Company of Craft" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="IP lookup with VPN and bot check" />
+    <meta property="og:description" content="Country, city, network, Tor and hosting checks, and bot and AI crawler detection for any IP address." />
+    <meta property="og:url" content="https://companyofcraft.com/ip-lookup" />
+    <meta property="og:image" content="https://companyofcraft.com/og/ip-lookup.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="IP lookup by Company of Craft." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@CompanyofCraft" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "IP lookup with VPN and bot check",
+        "url": "https://companyofcraft.com/ip-lookup",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "offers": { "@type": "Offer", "price": "0" },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Company of Craft",
+          "url": "https://companyofcraft.com/"
+        }
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How do I check if a request comes from a real Googlebot or GPTBot?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Anyone can put Googlebot or GPTBot in a user agent. Google, Bing, Apple, OpenAI, Anthropic and Perplexity publish the IP ranges their crawlers use. A request is real when its IP is in those ranges. Call the API with the ip and ua of the request to check it."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can it tell if someone uses a VPN?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Partly. Tor exit nodes are on a public list, so those are certain. VPNs and proxies mostly run on hosting networks like AWS, DigitalOcean, Hetzner or M247, so an IP from one of those is likely a VPN, a proxy or a server. A VPN on a home network looks like any home connection."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Why is my location a different city?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "An IP address belongs to a network, not a house. The location is where your internet provider says that network is, which can be the nearest big city. Mobile networks and VPNs can show a city far away."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Why is the city missing when I look up another IP?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The city comes from the network your request arrives through, so it is only known for your own IP. For other IPs the country comes from the regional internet registry."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Are the IPs I look up saved?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. Nothing is stored."
+            }
+          }
+        ]
+      }
+    </script>
+    <script type="module" src="/ip-lookup/main.ts"></script>
+  </head>
+  <body class="tool">
+    <main>
+      <header>
+        <nav>
+          <a class="home" href="/">
+            <picture>
+              <source srcset="/logos/mark-dark.svg" media="(prefers-color-scheme: dark)" />
+              <img src="/logos/mark.svg" alt="" width="24" height="24" />
+            </picture>
+            Company of Craft
+          </a>
+        </nav>
+        <h1>IP lookup</h1>
+        <p class="tagline">See what a website can tell from an IP address: where it is, whose network it is on, and whether it looks like a VPN, a bot or an AI crawler.</p>
+      </header>
+
+      <form class="lookup" method="get" action="/ip-lookup">
+        <label class="visually-hidden" for="ip">IP address</label>
+        <input id="ip" name="ip" type="text" inputmode="text" autocomplete="off" spellcheck="false" placeholder="Any IP, like 8.8.8.8" />
+        <button type="submit">Look up</button>
+      </form>
+
+      <p class="status" role="status" aria-live="polite"></p>
+      <div class="results" hidden></div>
+
+      <section class="faq">
+        <h2>Questions</h2>
+        <details>
+          <summary>How do I check if a request comes from a real Googlebot or GPTBot?</summary>
+          <p>Anyone can put Googlebot or GPTBot in a user agent. Google, Bing, Apple, OpenAI, Anthropic and Perplexity publish the IP ranges their crawlers use. A request is real when its IP is in those ranges. Call the API with the <code>ip</code> and <code>ua</code> of the request to check it.</p>
+        </details>
+        <details>
+          <summary>Can it tell if someone uses a VPN?</summary>
+          <p>Partly. Tor exit nodes are on a public list, so those are certain. VPNs and proxies mostly run on hosting networks like AWS, DigitalOcean, Hetzner or M247, so an IP from one of those is likely a VPN, a proxy or a server. A VPN on a home network looks like any home connection.</p>
+        </details>
+        <details>
+          <summary>Why is my location a different city?</summary>
+          <p>An IP address belongs to a network, not a house. The location is where your internet provider says that network is, which can be the nearest big city. Mobile networks and VPNs can show a city far away.</p>
+        </details>
+        <details>
+          <summary>Why is the city missing when I look up another IP?</summary>
+          <p>The city comes from the network your request arrives through, so it is only known for your own IP. For other IPs the country comes from the regional internet registry.</p>
+        </details>
+        <details>
+          <summary>Are the IPs I look up saved?</summary>
+          <p>No. Nothing is stored.</p>
+        </details>
+      </section>
+
+      <section class="about">
+        <h2>Detect bots on your site</h2>
+        <p>Send the visitor's IP and a few request headers from your server to <code>POST /api/ip-lookup</code>. The answer has a <code>verdict</code>: <code>human</code>, <code>proxy</code>, <code>bot</code>, <code>ai_crawler</code>, <code>search_bot</code> or <code>spoofed_crawler</code>, plus <code>isBot</code>, <code>isAiCrawler</code> and <code>isProxy</code>. Send only the headers below, not cookies.</p>
+        <pre class="file" data-lang="shellscript">curl -X POST https://companyofcraft.com/api/ip-lookup \
+  -d '{"ip":"66.249.66.1","headers":{"user-agent":"Googlebot/2.1"}}'</pre>
+        <p>On Netlify, an Edge Function can check every request:</p>
+        <pre class="file" data-lang="javascript">const HEADERS = ["user-agent", "accept", "accept-language", "sec-ch-ua", "sec-fetch-mode"];
+
+export default async (request, context) =&gt; {
+  const headers = Object.fromEntries(
+    HEADERS.filter((name) =&gt; request.headers.has(name)).map((name) =&gt; [name, request.headers.get(name)]),
+  );
+  const response = await fetch("https://companyofcraft.com/api/ip-lookup", {
+    method: "POST",
+    body: JSON.stringify({ ip: context.ip, headers }),
+  });
+  const { verdict } = await response.json();
+  if (verdict === "spoofed_crawler") {
+    return new Response("Forbidden", { status: 403 });
+  }
+  return context.next();
+};</pre>
+        <p>To check your own request, call <code>GET /api/ip-lookup</code>. Add <code>?ip=</code> and <code>&amp;ua=</code> to look up another IP. Each server or browser can make 600 calls a minute.</p>
+      </section>
+
+      <section class="about">
+        <h2>How it works</h2>
+        <p>The network and its country come from the <a href="https://www.team-cymru.com/ip-asn-mapping" target="_blank" rel="noopener">Team Cymru IP to ASN service</a>. Tor exit nodes come from the <a href="https://check.torproject.org/torbulkexitlist" target="_blank" rel="noopener">Tor Project list</a>. Bots are matched by user agent and checked against the IP ranges each company publishes. The map uses <a href="https://www.naturalearthdata.com" target="_blank" rel="noopener">Natural Earth</a> data.</p>
+        <p>Company of Craft also builds <a class="chip" href="https://stateofpixel.com" target="_blank" rel="noopener"><img src="/logos/stateofpixel.svg" alt="" width="18" height="18" />stateofpixel</a>, which catches UI regressions before they merge.</p>
+      </section>
+    </main>
+    <footer>
+      <div>
+        <p>Founded by <a class="chip" href="https://vaibhavacharya.com" target="_blank" rel="noopener"><img src="/logos/vaibhavacharya.svg" alt="" width="18" height="18" />Vaibhav Acharya</a></p>
+        <p>&copy; 2026 Company of Craft</p>
+      </div>
+      <div>
+        <p><a class="chip" href="https://x.com/CompanyofCraft" target="_blank" rel="noopener"><img src="/logos/x.svg" alt="" width="18" height="18" />@CompanyofCraft</a></p>
+        <p><a class="chip" href="mailto:hello@companyofcraft.com">hello@companyofcraft.com</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

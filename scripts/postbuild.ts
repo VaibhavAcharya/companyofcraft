@@ -44,6 +44,12 @@ const PAGES = [
     tagline: "Check the favicon, apple-touch-icon and web manifest.",
     sources: ["favicon-checker", "styles/favicon-checker.css"],
   },
+  {
+    path: "/ip-lookup",
+    title: "IP lookup",
+    tagline: "Country, city, network, VPN and bot checks for any IP.",
+    sources: ["ip-lookup", "styles/ip-lookup.css"],
+  },
 ];
 
 type Node = {
