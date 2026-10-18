@@ -1,0 +1,272 @@
+:root {
+  --color-line: light-dark(rgb(0 0 0 / 0.1), rgb(255 255 255 / 0.12));
+  --color-surface: light-dark(#ffffff, #141414);
+  --color-ok: light-dark(#297a3a, #62c073);
+  --color-missing: light-dark(#cb2a2f, #ff6166);
+  --mono: ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+.tool main {
+  display: block;
+  align-self: start;
+  justify-items: stretch;
+}
+
+.home {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: 0.8em;
+  color: var(--color-muted);
+  text-decoration: none;
+}
+
+.home:hover {
+  color: var(--color-fg);
+}
+
+.home img {
+  display: block;
+  width: 1.4em;
+  height: 1.4em;
+}
+
+.tool h1 {
+  margin-top: 1.5em;
+}
+
+.tool h2 {
+  margin: 2.5em 0 0.75em;
+  font-size: inherit;
+  font-weight: 600;
+}
+
+.lookup {
+  display: flex;
+  gap: 0.5em;
+  margin-top: 1.5em;
+}
+
+.lookup input,
+.lookup button {
+  height: 2.4em;
+  border-radius: 0.5em;
+  font: inherit;
+  letter-spacing: inherit;
+}
+
+.lookup input {
+  flex: 1;
+  min-width: 0;
+  padding: 0 0.7em;
+  border: 1px solid light-dark(#8f8f8f, #6e6e6e);
+  background: var(--color-surface);
+  color: inherit;
+}
+
+.lookup input:focus-visible,
+.lookup button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.lookup button {
+  padding: 0 1em;
+  border: 0;
+  background: var(--color-fg);
+  color: var(--color-bg);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.status:not(:empty) {
+  margin-top: 1em;
+  color: var(--color-muted);
+}
+
+.fetched {
+  margin-top: 1.5em;
+  font-size: 0.8em;
+  color: var(--color-muted);
+  overflow-wrap: anywhere;
+}
+
+.fetched a,
+.about a {
+  color: inherit;
+}
+
+.previews {
+  display: grid;
+  gap: 2em;
+  margin-top: 1.5em;
+}
+
+.preview {
+  margin: 0;
+}
+
+.preview figcaption {
+  margin-bottom: 0.5em;
+  font-size: 0.8em;
+  color: var(--color-muted);
+}
+
+.summary {
+  margin-top: 1.5em;
+  font-weight: 600;
+}
+
+.file {
+  max-height: 24em;
+  margin: 0;
+  padding: 0.75em 1em;
+  overflow: auto;
+  border: 1px solid var(--color-line);
+  border-radius: 0.5em;
+  background: var(--color-surface);
+  font-family: var(--mono);
+  font-size: 0.7em;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Checks and tags */
+
+.checks {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.8em;
+}
+
+.checks li {
+  display: grid;
+  grid-template-columns: 1.25em minmax(8em, auto) 1fr;
+  gap: 0.75em;
+  padding: 0.5em 0;
+  border-top: 1px solid var(--color-line);
+}
+
+.checks .ok .check-icon {
+  color: var(--color-ok);
+}
+
+.checks .missing .check-icon {
+  color: var(--color-missing);
+}
+
+.check-detail {
+  color: var(--color-muted);
+  overflow-wrap: anywhere;
+}
+
+.tool code,
+.tags dt {
+  font-family: var(--mono);
+  font-size: 0.9em;
+}
+
+.tags {
+  display: grid;
+  grid-template-columns: minmax(8em, auto) 1fr;
+  margin: 0;
+  font-size: 0.8em;
+}
+
+.tags dt,
+.tags dd {
+  margin: 0;
+  padding: 0.5em 0;
+  border-top: 1px solid var(--color-line);
+}
+
+.tags dt {
+  padding-right: 1em;
+}
+
+.tags dd {
+  color: var(--color-muted);
+  overflow-wrap: anywhere;
+}
+
+.empty {
+  font-size: 0.8em;
+  color: var(--color-muted);
+}
+
+.faq {
+  margin-top: 3em;
+  font-size: 0.8em;
+}
+
+.faq h2 {
+  margin-top: 0;
+}
+
+.faq details {
+  border-top: 1px solid var(--color-line);
+}
+
+.faq summary {
+  padding: 0.6em 0;
+  cursor: pointer;
+}
+
+.faq summary:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.faq details p {
+  padding-bottom: 0.75em;
+  color: var(--color-muted);
+}
+
+.about {
+  margin-top: 3em;
+  font-size: 0.8em;
+  color: var(--color-muted);
+}
+
+.about h2 {
+  margin-top: 0;
+  color: var(--color-fg);
+}
+
+.about p + p {
+  margin-top: 0.75em;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .tool main {
+    text-align: left;
+  }
+
+  .checks li {
+    grid-template-columns: 1.25em 1fr;
+  }
+
+  .check-detail {
+    grid-column: 2;
+  }
+
+  .tags {
+    grid-template-columns: 1fr;
+  }
+
+  .tags dd {
+    padding-top: 0;
+    border-top: 0;
+  }
+}

@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Favicon and web manifest checker / Company of Craft</title>
+    <meta name="description" content="Check the favicon, apple-touch-icon and web manifest of any page. See how the icon looks in a browser tab and on a home screen, and which sizes are missing. Free, no sign-up." />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+    <link rel="canonical" href="https://companyofcraft.com/favicon-checker/" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/logos/mark.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/logos/apple-touch-icon.png" />
+    <link rel="stylesheet" href="/styles/main.css" />
+    <link rel="stylesheet" href="/styles/tool.css" />
+    <link rel="stylesheet" href="/styles/favicon-checker.css" />
+
+    <meta property="og:site_name" content="Company of Craft" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Favicon and web manifest checker" />
+    <meta property="og:description" content="Check the favicon, apple-touch-icon and web manifest of any page." />
+    <meta property="og:url" content="https://companyofcraft.com/favicon-checker/" />
+    <meta property="og:image" content="https://companyofcraft.com/og/favicon-checker.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Favicon checker by Company of Craft." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@CompanyofCraft" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Favicon and web manifest checker",
+        "url": "https://companyofcraft.com/favicon-checker/",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "offers": { "@type": "Offer", "price": "0" },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Company of Craft",
+          "url": "https://companyofcraft.com/"
+        }
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Which icon files does a site need?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "A /favicon.ico for older browsers and tools, an SVG or 32x32 PNG linked with rel=\"icon\", a 180x180 apple-touch-icon for iOS, and a web manifest with 192x192 and 512x512 PNG icons for Android and installed apps."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Why does my old favicon still show?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Browsers cache favicons apart from the page and keep them for a long time. Change the file name, or add a query string to the href, so browsers fetch the new file."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is a maskable icon?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "An icon with room around the logo, marked purpose \"maskable\" in the web manifest. Android crops it to the shape the device uses, like a circle or a rounded square. Keep the logo inside the center 80% of the image."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Where does iOS get the home screen icon?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "From the apple-touch-icon link. When the page links none, Safari asks for /apple-touch-icon.png at the root of the site. Use a 180x180 PNG."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Are the links I check saved?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. The page, its icons and its manifest are fetched when you press Check, and nothing is stored."
+            }
+          }
+        ]
+      }
+    </script>
+    <script type="module" src="/favicon-checker/main.ts"></script>
+  </head>
+  <body class="tool">
+    <main>
+      <header>
+        <nav>
+          <a class="home" href="/">
+            <picture>
+              <source srcset="/logos/mark-dark.svg" media="(prefers-color-scheme: dark)" />
+              <img src="/logos/mark.svg" alt="" width="24" height="24" />
+            </picture>
+            Company of Craft
+          </a>
+        </nav>
+        <h1>Favicon checker</h1>
+        <p class="tagline">Check the favicon, apple-touch-icon and web manifest of any page.</p>
+      </header>
+
+      <form class="lookup" method="get" action="/favicon-checker/">
+        <label class="visually-hidden" for="url">Link</label>
+        <input id="url" name="url" type="text" inputmode="url" autocomplete="url" placeholder="example.com" required />
+        <button type="submit">Check</button>
+      </form>
+
+      <p class="status" role="status" aria-live="polite"></p>
+      <div class="results" hidden></div>
+
+      <section class="faq">
+        <h2>Questions</h2>
+        <details>
+          <summary>Which icon files does a site need?</summary>
+          <p>A <code>/favicon.ico</code> for older browsers and tools, an SVG or 32x32 PNG linked with <code>rel="icon"</code>, a 180x180 <code>apple-touch-icon</code> for iOS, and a web manifest with 192x192 and 512x512 PNG icons for Android and installed apps.</p>
+        </details>
+        <details>
+          <summary>Why does my old favicon still show?</summary>
+          <p>Browsers cache favicons apart from the page and keep them for a long time. Change the file name, or add a query string to the <code>href</code>, so browsers fetch the new file.</p>
+        </details>
+        <details>
+          <summary>What is a maskable icon?</summary>
+          <p>An icon with room around the logo, marked <code>"purpose": "maskable"</code> in the web manifest. Android crops it to the shape the device uses, like a circle or a rounded square. Keep the logo inside the center 80% of the image.</p>
+        </details>
+        <details>
+          <summary>Where does iOS get the home screen icon?</summary>
+          <p>From the <code>apple-touch-icon</code> link. When the page links none, Safari asks for <code>/apple-touch-icon.png</code> at the root of the site. Use a 180x180 PNG.</p>
+        </details>
+        <details>
+          <summary>Are the links I check saved?</summary>
+          <p>No. The page, its icons and its manifest are fetched when you press Check, and nothing is stored.</p>
+        </details>
+      </section>
+
+      <section class="about">
+        <h2>How it works</h2>
+        <p>The page at the link is fetched from our server. The checks read its icon and manifest links, then load each icon, <code>/favicon.ico</code> and the manifest to see that they work. Sizes come from the image files, not from the <code>sizes</code> attribute.</p>
+        <p>The tab and home screen are close to what browsers show, but each browser picks between icons in its own way.</p>
+        <p>Company of Craft also builds <a class="chip" href="https://stateofpixel.com" target="_blank" rel="noopener"><img src="/logos/stateofpixel.svg" alt="" width="18" height="18" />stateofpixel</a>, which catches UI regressions before they merge.</p>
+      </section>
+    </main>
+    <footer>
+      <div>
+        <p>Founded by <a class="chip" href="https://vaibhavacharya.com" target="_blank" rel="noopener"><img src="/logos/vaibhavacharya.svg" alt="" width="18" height="18" />Vaibhav Acharya</a></p>
+        <p>&copy; 2026 Company of Craft</p>
+      </div>
+      <div>
+        <p><a class="chip" href="https://x.com/CompanyofCraft" target="_blank" rel="noopener"><img src="/logos/x.svg" alt="" width="18" height="18" />@CompanyofCraft</a></p>
+        <p><a class="chip" href="mailto:hello@companyofcraft.com">hello@companyofcraft.com</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

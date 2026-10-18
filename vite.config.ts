@@ -4,7 +4,14 @@ import { markdownPath, pageMarkdown, pagePath } from "./scripts/markdown.ts";
 const CONTENT_SECURITY_POLICY =
   "default-src 'none'; style-src 'self'; img-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'";
 
-const OG_PREVIEW_CONTENT_SECURITY_POLICY =
+const TOOL_PATHS = [
+  "/og-preview/",
+  "/security-headers/",
+  "/agent-readability/",
+  "/favicon-checker/",
+];
+
+const TOOL_CONTENT_SECURITY_POLICY =
   "default-src 'none'; script-src 'self'; connect-src 'self'; style-src 'self'; img-src 'self' https:; font-src 'self'; base-uri 'none'; form-action 'self'";
 
 export default defineConfig({
@@ -33,8 +40,8 @@ export default defineConfig({
           tag: "meta",
           attrs: {
             "http-equiv": "Content-Security-Policy",
-            content: path.startsWith("/og-preview/")
-              ? OG_PREVIEW_CONTENT_SECURITY_POLICY
+            content: TOOL_PATHS.some((toolPath) => path.startsWith(toolPath))
+              ? TOOL_CONTENT_SECURITY_POLICY
               : CONTENT_SECURITY_POLICY,
           },
           injectTo: "head-prepend",
@@ -48,6 +55,9 @@ export default defineConfig({
         index: "index.html",
         notFound: "404.html",
         ogPreview: "og-preview/index.html",
+        securityHeaders: "security-headers/index.html",
+        agentReadability: "agent-readability/index.html",
+        faviconChecker: "favicon-checker/index.html",
       },
     },
   },

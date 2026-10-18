@@ -26,6 +26,24 @@ const PAGES = [
     tagline: "See how a link looks on X, LinkedIn, Slack and Discord.",
     sources: ["og-preview", "styles/og-preview.css"],
   },
+  {
+    path: "/security-headers/",
+    title: "Security headers checker",
+    tagline: "Check the Content-Security-Policy and headers of any page.",
+    sources: ["security-headers", "styles/tool.css"],
+  },
+  {
+    path: "/agent-readability/",
+    title: "Agent readability checker",
+    tagline: "Check if AI agents and crawlers can read a page.",
+    sources: ["agent-readability", "styles/tool.css"],
+  },
+  {
+    path: "/favicon-checker/",
+    title: "Favicon checker",
+    tagline: "Check the favicon, apple-touch-icon and web manifest.",
+    sources: ["favicon-checker", "styles/favicon-checker.css"],
+  },
 ];
 
 type Node = {

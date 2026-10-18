@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Agent readability checker / Company of Craft</title>
+    <meta name="description" content="Check if AI agents and crawlers can read a page: robots.txt rules for GPTBot, ClaudeBot and others, llms.txt, Markdown versions, sitemap and text without JavaScript. Free, no sign-up." />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+    <link rel="canonical" href="https://companyofcraft.com/agent-readability/" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/logos/mark.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/logos/apple-touch-icon.png" />
+    <link rel="stylesheet" href="/styles/main.css" />
+    <link rel="stylesheet" href="/styles/tool.css" />
+
+    <meta property="og:site_name" content="Company of Craft" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Agent readability checker" />
+    <meta property="og:description" content="Check if AI agents and crawlers can read a page." />
+    <meta property="og:url" content="https://companyofcraft.com/agent-readability/" />
+    <meta property="og:image" content="https://companyofcraft.com/og/agent-readability.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Agent readability checker by Company of Craft." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@CompanyofCraft" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Agent readability checker",
+        "url": "https://companyofcraft.com/agent-readability/",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "offers": { "@type": "Offer", "price": "0" },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Company of Craft",
+          "url": "https://companyofcraft.com/"
+        }
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is llms.txt?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "A Markdown file at /llms.txt that lists the important pages of a site with a short summary of each. It was proposed at llmstxt.org. Agents read it to find the right page without crawling the whole site."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I block or allow an AI crawler?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Add a User-agent group for the crawler in robots.txt, with Disallow: / to block it or Allow: / to allow it. Crawlers that collect training data, like GPTBot and ClaudeBot, are separate from the ones that fetch a page when a person asks, like ChatGPT-User and Claude-User, so you can block one and allow the other."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Why serve a Markdown version of a page?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "An HTML page carries navigation, scripts and styles, and an agent pays for all of it in tokens. A Markdown copy has only the content. Serve it at the same path with .md at the end, link it with a link rel=\"alternate\" type=\"text/markdown\" tag, or return it when the request has Accept: text/markdown."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Do AI crawlers run JavaScript?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Many do not. If scripts add the text of a page, those crawlers see an empty page. Render the text on the server or at build time."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Are the links I check saved?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. The page and its files are fetched when you press Check, and nothing is stored."
+            }
+          }
+        ]
+      }
+    </script>
+    <script type="module" src="/agent-readability/main.ts"></script>
+  </head>
+  <body class="tool">
+    <main>
+      <header>
+        <nav>
+          <a class="home" href="/">
+            <picture>
+              <source srcset="/logos/mark-dark.svg" media="(prefers-color-scheme: dark)" />
+              <img src="/logos/mark.svg" alt="" width="24" height="24" />
+            </picture>
+            Company of Craft
+          </a>
+        </nav>
+        <h1>Agent readability checker</h1>
+        <p class="tagline">Check if AI agents and crawlers can find and read a page.</p>
+      </header>
+
+      <form class="lookup" method="get" action="/agent-readability/">
+        <label class="visually-hidden" for="url">Link</label>
+        <input id="url" name="url" type="text" inputmode="url" autocomplete="url" placeholder="example.com" required />
+        <button type="submit">Check</button>
+      </form>
+
+      <p class="status" role="status" aria-live="polite"></p>
+      <div class="results" hidden></div>
+
+      <section class="faq">
+        <h2>Questions</h2>
+        <details>
+          <summary>What is llms.txt?</summary>
+          <p>A Markdown file at <code>/llms.txt</code> that lists the important pages of a site with a short summary of each. It was proposed at <a href="https://llmstxt.org" target="_blank" rel="noopener">llmstxt.org</a>. Agents read it to find the right page without crawling the whole site.</p>
+        </details>
+        <details>
+          <summary>How do I block or allow an AI crawler?</summary>
+          <p>Add a <code>User-agent</code> group for the crawler in <code>robots.txt</code>, with <code>Disallow: /</code> to block it or <code>Allow: /</code> to allow it. Crawlers that collect training data, like GPTBot and ClaudeBot, are separate from the ones that fetch a page when a person asks, like ChatGPT-User and Claude-User, so you can block one and allow the other.</p>
+        </details>
+        <details>
+          <summary>Why serve a Markdown version of a page?</summary>
+          <p>An HTML page carries navigation, scripts and styles, and an agent pays for all of it in tokens. A Markdown copy has only the content. Serve it at the same path with <code>.md</code> at the end, link it with <code>&lt;link rel="alternate" type="text/markdown"&gt;</code>, or return it when the request has <code>Accept: text/markdown</code>.</p>
+        </details>
+        <details>
+          <summary>Do AI crawlers run JavaScript?</summary>
+          <p>Many do not. If scripts add the text of a page, those crawlers see an empty page. Render the text on the server or at build time.</p>
+        </details>
+        <details>
+          <summary>Are the links I check saved?</summary>
+          <p>No. The page and its files are fetched when you press Check, and nothing is stored.</p>
+        </details>
+      </section>
+
+      <section class="about">
+        <h2>How it works</h2>
+        <p>The page at the link is fetched from our server without running its scripts, the way crawlers that do not run JavaScript see it. Then <code>robots.txt</code>, <code>llms.txt</code>, <code>llms-full.txt</code>, the sitemap and the Markdown version of the page are fetched from the same site.</p>
+        <p>The crawler list reads the <code>robots.txt</code> rules for each crawler and the path of the page. Some sites also block crawlers at the firewall, which this check cannot see.</p>
+        <p>Company of Craft also builds <a class="chip" href="https://stateofpixel.com" target="_blank" rel="noopener"><img src="/logos/stateofpixel.svg" alt="" width="18" height="18" />stateofpixel</a>, which catches UI regressions before they merge.</p>
+      </section>
+    </main>
+    <footer>
+      <div>
+        <p>Founded by <a class="chip" href="https://vaibhavacharya.com" target="_blank" rel="noopener"><img src="/logos/vaibhavacharya.svg" alt="" width="18" height="18" />Vaibhav Acharya</a></p>
+        <p>&copy; 2026 Company of Craft</p>
+      </div>
+      <div>
+        <p><a class="chip" href="https://x.com/CompanyofCraft" target="_blank" rel="noopener"><img src="/logos/x.svg" alt="" width="18" height="18" />@CompanyofCraft</a></p>
+        <p><a class="chip" href="mailto:hello@companyofcraft.com">hello@companyofcraft.com</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,4 +1,11 @@
-type Check = { ok: boolean; label: string; detail: string };
+import {
+  type Check,
+  checkList,
+  definitionList,
+  el,
+  fetched,
+  runLookup,
+} from "../lib/tool.ts";
 
 type Preview = {
   url: string;
@@ -16,52 +23,11 @@ type Preview = {
   checks: Check[];
 };
 
-const input = document.querySelector<HTMLInputElement>("#url");
-const statusLine = document.querySelector<HTMLParagraphElement>(".status");
-const results = document.querySelector<HTMLDivElement>(".results");
-
-const target = new URLSearchParams(location.search).get("url");
-if (input && statusLine && results && target) {
-  input.value = target;
-  statusLine.textContent = "Fetching the page...";
-  load(target).then(
-    (preview) => {
-      statusLine.textContent = "";
-      results.replaceChildren(...render(preview));
-      results.hidden = false;
-    },
-    (error: Error) => {
-      statusLine.textContent = error.message;
-    },
-  );
-}
-
-async function load(url: string): Promise<Preview> {
-  const response = await fetch(
-    `/api/og-preview?${new URLSearchParams({ url })}`,
-  );
-  if (response.status === 429) {
-    throw new Error("Too many previews. Try again in a minute.");
-  }
-  const body = await response.json().catch(() => null);
-  if (!response.ok || body === null) {
-    throw new Error(body?.error ?? "Could not load that page.");
-  }
-  return body;
-}
-
-function el<K extends keyof HTMLElementTagNameMap>(
-  tag: K,
-  className: string,
-  children: (Node | string | null | undefined)[] = [],
-): HTMLElementTagNameMap[K] {
-  const node = document.createElement(tag);
-  if (className) {
-    node.className = className;
-  }
-  node.append(...children.filter((child) => child != null));
-  return node;
-}
+runLookup<Preview>(
+  "/api/og-preview",
+  "Too many previews. Try again in a minute.",
+  render,
+);
 
 function image(preview: Preview, className: string) {
   if (!preview.image) {
@@ -137,13 +103,8 @@ function render(preview: Preview) {
     discord.style.borderLeftColor = preview.themeColor;
   }
 
-  const link = el("a", "", [preview.url]);
-  link.href = preview.url;
-  link.rel = "noopener nofollow";
-  link.target = "_blank";
-
   return [
-    el("p", "fetched", [`${preview.status} `, link]),
+    fetched(preview.status, preview.url),
     el("div", "previews", [
       figure("X", el("div", "", [x, xFrom])),
       figure("LinkedIn", linkedin),
@@ -151,27 +112,10 @@ function render(preview: Preview) {
       figure("Discord", discord),
     ]),
     el("h2", "", ["Checks"]),
-    el(
-      "ul",
-      "checks",
-      preview.checks.map((check) =>
-        el("li", check.ok ? "ok" : "missing", [
-          el("span", "check-icon", [check.ok ? "✓" : "✕"]),
-          el("code", "", [check.label]),
-          el("span", "check-detail", [check.detail]),
-        ]),
-      ),
-    ),
+    checkList(preview.checks),
     el("h2", "", ["Tags"]),
     preview.tags.length === 0
       ? el("p", "empty", ["No og: or twitter: tags on this page."])
-      : el(
-          "dl",
-          "tags",
-          preview.tags.flatMap(([name, value]) => [
-            el("dt", "", [name]),
-            el("dd", "", [value]),
-          ]),
-        ),
+      : definitionList(preview.tags),
   ];
 }

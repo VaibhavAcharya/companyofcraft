@@ -35,26 +35,35 @@ Company of Craft builds [stateofpixel](https://stateofpixel.com). Founded by [Va
 | Tool | What it does |
 |---|---|
 | [Open Graph preview](https://companyofcraft.com/og-preview/) | Shows how a link looks on X, LinkedIn, Slack and Discord, and checks its Open Graph and Twitter tags |
+| [Security headers checker](https://companyofcraft.com/security-headers/) | Checks the Content-Security-Policy, Strict-Transport-Security, framing, cookies and other security headers of a page |
+| [Agent readability checker](https://companyofcraft.com/agent-readability/) | Checks if AI agents and crawlers can read a page: robots.txt rules per crawler, llms.txt, Markdown versions, sitemap and text without JavaScript |
+| [Favicon checker](https://companyofcraft.com/favicon-checker/) | Checks the favicon, apple-touch-icon and web manifest of a page, and shows the browser tab and home screen |
 
 ## The site
 
-Plain HTML and CSS built with [Vite](https://vite.dev). The home page ships no JavaScript. The Open Graph preview page loads one script.
+Plain HTML and CSS built with [Vite](https://vite.dev). The home page ships no JavaScript. Each tool page loads one script.
 
 | Path | What it is |
 |---|---|
 | `index.html` | The site |
 | `404.html` | Served by Netlify for unknown paths |
-| `og-preview/index.html`, `og-preview/main.ts`, `styles/og-preview.css` | The Open Graph preview tool. The script reads `?url=` and calls `/api/og-preview` |
-| `netlify/functions/og-preview.ts` | Public API at `/api/og-preview?url=` that fetches a page and returns its tags, the preview fields and the checks. It refuses private addresses, follows up to 5 redirects and is rate limited to 30 requests a minute per IP |
-| `styles/main.css` | All styles. IBM Plex Sans comes from `@fontsource-variable/ibm-plex-sans`, the same font as stateofpixel |
+| `og-preview/`, `security-headers/`, `agent-readability/`, `favicon-checker/` | The tool pages. Each `main.ts` reads `?url=` and calls the API of the same name under `/api/` |
+| `lib/tool.ts` | Browser code the tool pages share: the lookup, the checks list and the definition lists |
+| `netlify/functions/og-preview.ts` | Public API at `/api/og-preview?url=` that fetches a page and returns its tags, the preview fields and the checks |
+| `netlify/functions/security-headers.ts` | Public API at `/api/security-headers?url=` that fetches a page, and its `http://` address, and checks the response headers and the Content-Security-Policy |
+| `netlify/functions/agent-readability.ts` | Public API at `/api/agent-readability?url=` that fetches a page with its `robots.txt`, `llms.txt`, `llms-full.txt`, sitemap and Markdown version |
+| `netlify/functions/favicon-checker.ts` | Public API at `/api/favicon-checker?url=` that fetches a page, its icons and its web manifest, and reads the icon sizes from the files |
+| `netlify/lib` | Server code the APIs share. Every fetch refuses private addresses and follows up to 5 redirects. Each API is rate limited to 30 requests a minute per IP |
+| `styles/main.css` | Styles of every page. IBM Plex Sans comes from `@fontsource-variable/ibm-plex-sans`, the same font as stateofpixel |
+| `styles/tool.css`, `styles/og-preview.css`, `styles/favicon-checker.css` | Styles of the tool pages, and the previews of the two tools that have them |
 | `public/logos` | `mark.svg` (black on white, also the favicon), `mark-dark.svg` (white on black), PNG exports, logos of linked sites |
 | `public` | `robots.txt`, `llms.txt`, `favicon.ico` and `.well-known/security.txt`, served from the site root |
-| `scripts/postbuild.ts` | Writes an Open Graph image per page to `dist/og/`, the X banner to `dist/og/x-banner.png`, a Markdown copy of each page (`dist/index.md`, `dist/og-preview.md`) and `dist/sitemap.xml`, with `lastmod` from git |
+| `scripts/postbuild.ts` | Writes an Open Graph image per page to `dist/og/`, the X banner to `dist/og/x-banner.png`, a Markdown copy of each page (`dist/index.md`, `dist/og-preview.md` and so on) and `dist/sitemap.xml`, with `lastmod` from git |
 | `scripts/markdown.ts` | Turns the `<main>` of a page into Markdown. Used by the build and by `pnpm dev`, which serves the same `.md` paths |
 | `vite.config.ts` | Build inputs and the page Content Security Policy |
 | `netlify.toml` | Build settings and security headers |
 | `netlify/functions/notify.ts` | Private API at `/api/notify` that sends Telegram notifications |
-| `visual/home.visual.ts`, `playwright.config.ts` | Screenshots of the page, light and dark at 1280px and 375px, for [stateofpixel](https://stateofpixel.com) |
+| `visual/home.visual.ts`, `playwright.config.ts` | Screenshots of each page, light and dark at 1280px and 375px, for [stateofpixel](https://stateofpixel.com) |
 | `.github/workflows/visual.yml` | Takes the screenshots on pushes to `main` and on pull requests, and uploads them to stateofpixel |
 
 ## Notify API

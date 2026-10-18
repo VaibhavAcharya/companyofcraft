@@ -1,0 +1,125 @@
+/* Browser tab */
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75em;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 240px;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 8px 8px 0 0;
+  font-family: system-ui, sans-serif;
+  font-size: 12px;
+  letter-spacing: 0;
+}
+
+.tab-light {
+  background: #ffffff;
+  color: #1f1f1f;
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.1);
+}
+
+.tab-dark {
+  background: #35363a;
+  color: #e8eaed;
+}
+
+.tab-icon {
+  flex: none;
+  width: 16px;
+  height: 16px;
+}
+
+.tab-title {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Home screen */
+
+.homescreen {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 20px 24px;
+  border-radius: 16px;
+  background: linear-gradient(160deg, #3a4a6b, #1c2333);
+  font-family: system-ui, sans-serif;
+  letter-spacing: 0;
+}
+
+.homescreen-icon {
+  display: block;
+  width: 60px;
+  height: 60px;
+  border-radius: 13px;
+  object-fit: cover;
+  background: #000000;
+}
+
+.homescreen-label {
+  max-width: 76px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: #ffffff;
+  font-size: 12px;
+}
+
+.icon-missing {
+  display: block;
+  border: 1px dashed var(--color-muted);
+}
+
+/* Icon list */
+
+.icons {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+  gap: 1em;
+  font-size: 0.8em;
+}
+
+.icon {
+  margin: 0;
+}
+
+.icon-frame {
+  display: grid;
+  place-items: center;
+  height: 88px;
+  border: 1px solid var(--color-line);
+  border-radius: 0.5em;
+  background:
+    repeating-conic-gradient(var(--color-chip) 0 25%, transparent 0 50%) 0 0 /
+    16px 16px;
+}
+
+.icon-image {
+  display: block;
+  max-width: 64px;
+  max-height: 64px;
+}
+
+.icon figcaption {
+  display: grid;
+  margin-top: 0.5em;
+  color: var(--color-muted);
+  overflow-wrap: anywhere;
+}
+
+.icon figcaption code {
+  color: var(--color-fg);
+}
+
+.icon-broken .icon-frame {
+  border-color: var(--color-missing);
+}
