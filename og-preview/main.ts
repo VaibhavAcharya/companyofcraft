@@ -104,7 +104,7 @@ function render(preview: Preview) {
   }
 
   return [
-    fetched(preview.status, preview.url),
+    fetched("og-preview", preview.status, preview.url),
     el("div", "previews", [
       figure("X", el("div", "", [x, xFrom])),
       figure("LinkedIn", linkedin),

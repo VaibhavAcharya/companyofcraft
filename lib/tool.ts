@@ -1,3 +1,5 @@
+import { track, trackFaqOpens } from "./analytics.ts";
+
 export type Check = { ok: boolean; label: string; detail: string };
 
 export function runLookup<Result>(
@@ -8,12 +10,14 @@ export function runLookup<Result>(
   const input = document.querySelector<HTMLInputElement>("#url");
   const statusLine = document.querySelector<HTMLParagraphElement>(".status");
   const results = document.querySelector<HTMLDivElement>(".results");
+  const tool = api.replace("/api/", "");
+  trackFaqOpens(tool);
 
   const target = new URLSearchParams(location.search).get("url");
   if (input && statusLine && results && target) {
     input.value = target;
     statusLine.textContent = "Fetching the page...";
-    load<Result>(api, target, tooMany).then(
+    load<Result>(api, tool, target, tooMany).then(
       (result) => {
         statusLine.textContent = "";
         results.replaceChildren(...render(result));
@@ -28,17 +32,21 @@ export function runLookup<Result>(
 
 async function load<Result>(
   api: string,
+  tool: string,
   url: string,
   tooMany: string,
 ): Promise<Result> {
   const response = await fetch(`${api}?${new URLSearchParams({ url })}`);
   if (response.status === 429) {
+    track("lookup", { tool, url, result: "rate-limited" });
     throw new Error(tooMany);
   }
   const body = await response.json().catch(() => null);
   if (!response.ok || body === null) {
+    track("lookup", { tool, url, result: "error" });
     throw new Error(body?.error ?? "Could not load that page.");
   }
+  track("lookup", { tool, url, result: "ok" });
   return body;
 }
 
@@ -55,11 +63,12 @@ export function el<K extends keyof HTMLElementTagNameMap>(
   return node;
 }
 
-export function fetched(status: number, url: string) {
+export function fetched(tool: string, status: number, url: string) {
   const link = el("a", "", [url]);
   link.href = url;
   link.rel = "noopener nofollow";
   link.target = "_blank";
+  link.addEventListener("click", () => track("result-link", { tool }));
   return el("p", "fetched", [`${status} `, link]);
 }
 

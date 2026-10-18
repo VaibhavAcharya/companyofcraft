@@ -24,7 +24,7 @@ runLookup<Report>(
 
 function render(report: Report) {
   return [
-    fetched(report.status, report.url),
+    fetched("security-headers", report.status, report.url),
     summary(report.checks),
     el("h2", "", ["Checks"]),
     checkList(report.checks),

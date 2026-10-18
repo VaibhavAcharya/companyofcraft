@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import { markdownPath, pageMarkdown, pagePath } from "./scripts/markdown.ts";
 
 const CONTENT_SECURITY_POLICY =
-  "default-src 'none'; style-src 'self'; img-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'";
+  "default-src 'none'; script-src https://umami.vaibhavacharya.com; connect-src https://umami.vaibhavacharya.com; style-src 'self'; img-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'";
 
 const TOOL_PATHS = [
   "/og-preview.html",
@@ -13,7 +13,7 @@ const TOOL_PATHS = [
 ];
 
 const TOOL_CONTENT_SECURITY_POLICY =
-  "default-src 'none'; script-src 'self'; connect-src 'self'; style-src 'self'; img-src 'self' https:; font-src 'self'; base-uri 'none'; form-action 'self'";
+  "default-src 'none'; script-src 'self' https://umami.vaibhavacharya.com; connect-src 'self' https://umami.vaibhavacharya.com; style-src 'self'; img-src 'self' https:; font-src 'self'; base-uri 'none'; form-action 'self'";
 
 export default defineConfig({
   appType: "mpa",

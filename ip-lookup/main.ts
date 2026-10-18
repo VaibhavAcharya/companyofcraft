@@ -1,3 +1,4 @@
+import { track, trackFaqOpens } from "../lib/analytics.ts";
 import { definitionList, el } from "../lib/tool.ts";
 import {
   COLUMNS,
@@ -82,6 +83,7 @@ if (input && statusLine && results) {
 }
 
 highlightCode();
+trackFaqOpens("ip-lookup");
 
 function highlightCode() {
   import("./highlight.ts").then(({ highlight }) => {
@@ -97,12 +99,19 @@ async function load(ip: string): Promise<Report> {
   const query = ip ? `?${new URLSearchParams({ ip })}` : "";
   const response = await fetch(`/api/ip-lookup${query}`);
   if (response.status === 429) {
+    track("lookup", {
+      tool: "ip-lookup",
+      ip: ip || "self",
+      result: "rate-limited",
+    });
     throw new Error("Too many lookups. Try again in a minute.");
   }
   const body = await response.json().catch(() => null);
   if (!response.ok || body === null) {
+    track("lookup", { tool: "ip-lookup", ip: ip || "self", result: "error" });
     throw new Error(body?.error ?? "Could not look up that IP.");
   }
+  track("lookup", { tool: "ip-lookup", ip: ip || "self", result: "ok" });
   return body;
 }
 
@@ -134,6 +143,7 @@ function copyButton(label: string, text: () => string) {
   const button = el("button", "copy", [label]);
   button.type = "button";
   button.addEventListener("click", () => {
+    track("ip-lookup-copy", { label });
     navigator.clipboard.writeText(text()).then(() => {
       button.textContent = "Copied";
       setTimeout(() => {
@@ -364,13 +374,17 @@ function views(report: Report) {
     });
   };
   tabs.forEach((tab, index) => {
-    tab.addEventListener("click", () => select(index));
+    tab.addEventListener("click", () => {
+      select(index);
+      track("ip-lookup-view", { view: panels[index].name });
+    });
     tab.addEventListener("keydown", (event) => {
       if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
         const next =
           (index + (event.key === "ArrowRight" ? 1 : -1) + tabs.length) %
           tabs.length;
         select(next);
+        track("ip-lookup-view", { view: panels[next].name });
         tabs[next].focus();
       }
     });

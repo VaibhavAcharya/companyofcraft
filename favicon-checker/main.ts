@@ -115,7 +115,7 @@ function render(report: Report) {
     el("span", "homescreen-label", [report.appTitle ?? report.title]),
   ]);
   return [
-    fetched(report.status, report.url),
+    fetched("favicon-checker", report.status, report.url),
     el("div", "previews", [
       el("figure", "preview", [
         el("figcaption", "", ["Browser tab"]),
