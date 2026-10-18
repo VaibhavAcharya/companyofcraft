@@ -3,28 +3,27 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Favicon and web manifest checker / Company of Craft</title>
-    <meta name="description" content="Check the favicon, apple-touch-icon and web manifest of any page. See how the icon looks in a browser tab and on a home screen, and which sizes are missing. Free, no sign-up." />
+    <title>Security headers and CSP checker / Company of Craft</title>
+    <meta name="description" content="Check the security headers of any page: Content-Security-Policy, Strict-Transport-Security, framing, cookies and more, with a fix for each problem. Free, no sign-up." />
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
-    <link rel="canonical" href="https://companyofcraft.com/favicon-checker/" />
+    <link rel="canonical" href="https://companyofcraft.com/security-headers" />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" href="/logos/mark.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/logos/apple-touch-icon.png" />
     <link rel="stylesheet" href="/styles/main.css" />
     <link rel="stylesheet" href="/styles/tool.css" />
-    <link rel="stylesheet" href="/styles/favicon-checker.css" />
 
     <meta property="og:site_name" content="Company of Craft" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Favicon and web manifest checker" />
-    <meta property="og:description" content="Check the favicon, apple-touch-icon and web manifest of any page." />
-    <meta property="og:url" content="https://companyofcraft.com/favicon-checker/" />
-    <meta property="og:image" content="https://companyofcraft.com/og/favicon-checker.png" />
+    <meta property="og:title" content="Security headers and CSP checker" />
+    <meta property="og:description" content="Check the security headers and Content-Security-Policy of any page." />
+    <meta property="og:url" content="https://companyofcraft.com/security-headers" />
+    <meta property="og:image" content="https://companyofcraft.com/og/security-headers.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Favicon checker by Company of Craft." />
+    <meta property="og:image:alt" content="Security headers checker by Company of Craft." />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@CompanyofCraft" />
 
@@ -32,8 +31,8 @@
       {
         "@context": "https://schema.org",
         "@type": "WebApplication",
-        "name": "Favicon and web manifest checker",
-        "url": "https://companyofcraft.com/favicon-checker/",
+        "name": "Security headers and CSP checker",
+        "url": "https://companyofcraft.com/security-headers",
         "applicationCategory": "DeveloperApplication",
         "operatingSystem": "Any",
         "offers": { "@type": "Offer", "price": "0" },
@@ -51,34 +50,34 @@
         "mainEntity": [
           {
             "@type": "Question",
-            "name": "Which icon files does a site need?",
+            "name": "What do security headers do?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "A /favicon.ico for older browsers and tools, an SVG or 32x32 PNG linked with rel=\"icon\", a 180x180 apple-touch-icon for iOS, and a web manifest with 192x192 and 512x512 PNG icons for Android and installed apps."
+              "text": "They are HTTP response headers that tell the browser what a page may do: where scripts can load from, whether other sites can put it in a frame, and whether to always use HTTPS. They protect visitors from attacks like cross-site scripting and clickjacking."
             }
           },
           {
             "@type": "Question",
-            "name": "Why does my old favicon still show?",
+            "name": "What is a good first Content-Security-Policy?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Browsers cache favicons apart from the page and keep them for a long time. Change the file name, or add a query string to the href, so browsers fetch the new file."
+              "text": "Start with default-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none' and add the hosts your page loads from. Send it as Content-Security-Policy-Report-Only first, check the browser console for blocked requests, then switch to Content-Security-Policy."
             }
           },
           {
             "@type": "Question",
-            "name": "What is a maskable icon?",
+            "name": "Why is 'unsafe-inline' a problem?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "An icon with room around the logo, marked purpose \"maskable\" in the web manifest. Android crops it to the shape the device uses, like a circle or a rounded square. Keep the logo inside the center 80% of the image."
+              "text": "It lets every inline script run, including one an attacker injects. Give the inline scripts you need a nonce or a hash instead. When a nonce or a hash is in script-src, browsers ignore 'unsafe-inline'."
             }
           },
           {
             "@type": "Question",
-            "name": "Where does iOS get the home screen icon?",
+            "name": "Does a Content-Security-Policy in a meta tag work?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "From the apple-touch-icon link. When the page links none, Safari asks for /apple-touch-icon.png at the root of the site. Use a 180x180 PNG."
+              "text": "Most of it does. Browsers ignore frame-ancestors, report-uri and sandbox in a meta tag, so send those in the header."
             }
           },
           {
@@ -86,13 +85,13 @@
             "name": "Are the links I check saved?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "No. The page, its icons and its manifest are fetched when you press Check, and nothing is stored."
+              "text": "No. The page is fetched when you press Check, and nothing is stored."
             }
           }
         ]
       }
     </script>
-    <script type="module" src="/favicon-checker/main.ts"></script>
+    <script type="module" src="/security-headers/main.ts"></script>
   </head>
   <body class="tool">
     <main>
@@ -106,11 +105,11 @@
             Company of Craft
           </a>
         </nav>
-        <h1>Favicon checker</h1>
-        <p class="tagline">Check the favicon, apple-touch-icon and web manifest of any page.</p>
+        <h1>Security headers checker</h1>
+        <p class="tagline">Check the Content-Security-Policy and security headers of any page.</p>
       </header>
 
-      <form class="lookup" method="get" action="/favicon-checker/">
+      <form class="lookup" method="get" action="/security-headers">
         <label class="visually-hidden" for="url">Link</label>
         <input id="url" name="url" type="text" inputmode="url" autocomplete="url" placeholder="example.com" required />
         <button type="submit">Check</button>
@@ -122,31 +121,31 @@
       <section class="faq">
         <h2>Questions</h2>
         <details>
-          <summary>Which icon files does a site need?</summary>
-          <p>A <code>/favicon.ico</code> for older browsers and tools, an SVG or 32x32 PNG linked with <code>rel="icon"</code>, a 180x180 <code>apple-touch-icon</code> for iOS, and a web manifest with 192x192 and 512x512 PNG icons for Android and installed apps.</p>
+          <summary>What do security headers do?</summary>
+          <p>They are HTTP response headers that tell the browser what a page may do: where scripts can load from, whether other sites can put it in a frame, and whether to always use HTTPS. They protect visitors from attacks like cross-site scripting and clickjacking.</p>
         </details>
         <details>
-          <summary>Why does my old favicon still show?</summary>
-          <p>Browsers cache favicons apart from the page and keep them for a long time. Change the file name, or add a query string to the <code>href</code>, so browsers fetch the new file.</p>
+          <summary>What is a good first Content-Security-Policy?</summary>
+          <p>Start with <code>default-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'</code> and add the hosts your page loads from. Send it as <code>Content-Security-Policy-Report-Only</code> first, check the browser console for blocked requests, then switch to <code>Content-Security-Policy</code>.</p>
         </details>
         <details>
-          <summary>What is a maskable icon?</summary>
-          <p>An icon with room around the logo, marked <code>"purpose": "maskable"</code> in the web manifest. Android crops it to the shape the device uses, like a circle or a rounded square. Keep the logo inside the center 80% of the image.</p>
+          <summary>Why is 'unsafe-inline' a problem?</summary>
+          <p>It lets every inline script run, including one an attacker injects. Give the inline scripts you need a nonce or a hash instead. When a nonce or a hash is in <code>script-src</code>, browsers ignore <code>'unsafe-inline'</code>.</p>
         </details>
         <details>
-          <summary>Where does iOS get the home screen icon?</summary>
-          <p>From the <code>apple-touch-icon</code> link. When the page links none, Safari asks for <code>/apple-touch-icon.png</code> at the root of the site. Use a 180x180 PNG.</p>
+          <summary>Does a Content-Security-Policy in a meta tag work?</summary>
+          <p>Most of it does. Browsers ignore <code>frame-ancestors</code>, <code>report-uri</code> and <code>sandbox</code> in a meta tag, so send those in the header.</p>
         </details>
         <details>
           <summary>Are the links I check saved?</summary>
-          <p>No. The page, its icons and its manifest are fetched when you press Check, and nothing is stored.</p>
+          <p>No. The page is fetched when you press Check, and nothing is stored.</p>
         </details>
       </section>
 
       <section class="about">
         <h2>How it works</h2>
-        <p>The page at the link is fetched from our server. The checks read its icon and manifest links, then load each icon, <code>/favicon.ico</code> and the manifest to see that they work. Sizes come from the image files, not from the <code>sizes</code> attribute.</p>
-        <p>The tab and home screen are close to what browsers show, but each browser picks between icons in its own way.</p>
+        <p>The page at the link is fetched from our server, once at its address and once over <code>http://</code> to see if it redirects to HTTPS. The checks read the response headers and any Content-Security-Policy in a <code>&lt;meta&gt;</code> tag. When both are set, the browser applies both, so the checks read them together.</p>
+        <p>The checks cover the headers most sites need. A page can pass all of them and still have other security problems.</p>
         <p>Company of Craft also builds <a class="chip" href="https://stateofpixel.com" target="_blank" rel="noopener"><img src="/logos/stateofpixel.svg" alt="" width="18" height="18" />stateofpixel</a>, which catches UI regressions before they merge.</p>
       </section>
     </main>

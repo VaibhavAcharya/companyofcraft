@@ -22,13 +22,12 @@ export function markdownPath(path: string): string {
 }
 
 export function pagePath(markdownFile: string): string | undefined {
-  const path =
-    markdownFile === "/index.md" ? "/" : `${markdownFile.slice(0, -3)}/`;
+  const path = markdownFile === "/index.md" ? "/" : markdownFile.slice(0, -3);
   return existsSync(htmlFile(path)) ? path : undefined;
 }
 
 function htmlFile(path: string): string {
-  return `${path.slice(1)}index.html`;
+  return path === "/" ? "index.html" : `${path.slice(1)}.html`;
 }
 
 export async function pageMarkdown(path: string): Promise<string> {

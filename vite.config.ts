@@ -5,10 +5,10 @@ const CONTENT_SECURITY_POLICY =
   "default-src 'none'; style-src 'self'; img-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'";
 
 const TOOL_PATHS = [
-  "/og-preview/",
-  "/security-headers/",
-  "/agent-readability/",
-  "/favicon-checker/",
+  "/og-preview.html",
+  "/security-headers.html",
+  "/agent-readability.html",
+  "/favicon-checker.html",
 ];
 
 const TOOL_CONTENT_SECURITY_POLICY =
@@ -40,7 +40,7 @@ export default defineConfig({
           tag: "meta",
           attrs: {
             "http-equiv": "Content-Security-Policy",
-            content: TOOL_PATHS.some((toolPath) => path.startsWith(toolPath))
+            content: TOOL_PATHS.includes(path)
               ? TOOL_CONTENT_SECURITY_POLICY
               : CONTENT_SECURITY_POLICY,
           },
@@ -54,10 +54,10 @@ export default defineConfig({
       input: {
         index: "index.html",
         notFound: "404.html",
-        ogPreview: "og-preview/index.html",
-        securityHeaders: "security-headers/index.html",
-        agentReadability: "agent-readability/index.html",
-        faviconChecker: "favicon-checker/index.html",
+        ogPreview: "og-preview.html",
+        securityHeaders: "security-headers.html",
+        agentReadability: "agent-readability.html",
+        faviconChecker: "favicon-checker.html",
       },
     },
   },

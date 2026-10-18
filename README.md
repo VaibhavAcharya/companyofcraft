@@ -34,10 +34,10 @@ Company of Craft builds [stateofpixel](https://stateofpixel.com). Founded by [Va
 
 | Tool | What it does |
 |---|---|
-| [Open Graph preview](https://companyofcraft.com/og-preview/) | Shows how a link looks on X, LinkedIn, Slack and Discord, and checks its Open Graph and Twitter tags |
-| [Security headers checker](https://companyofcraft.com/security-headers/) | Checks the Content-Security-Policy, Strict-Transport-Security, framing, cookies and other security headers of a page |
-| [Agent readability checker](https://companyofcraft.com/agent-readability/) | Checks if AI agents and crawlers can read a page: robots.txt rules per crawler, llms.txt, Markdown versions, sitemap and text without JavaScript |
-| [Favicon checker](https://companyofcraft.com/favicon-checker/) | Checks the favicon, apple-touch-icon and web manifest of a page, and shows the browser tab and home screen |
+| [Open Graph preview](https://companyofcraft.com/og-preview) | Shows how a link looks on X, LinkedIn, Slack and Discord, and checks its Open Graph and Twitter tags |
+| [Security headers checker](https://companyofcraft.com/security-headers) | Checks the Content-Security-Policy, Strict-Transport-Security, framing, cookies and other security headers of a page |
+| [Agent readability checker](https://companyofcraft.com/agent-readability) | Checks if AI agents and crawlers can read a page: robots.txt rules per crawler, llms.txt, Markdown versions, sitemap and text without JavaScript |
+| [Favicon checker](https://companyofcraft.com/favicon-checker) | Checks the favicon, apple-touch-icon and web manifest of a page, and shows the browser tab and home screen |
 
 ## The site
 
@@ -47,7 +47,7 @@ Plain HTML and CSS built with [Vite](https://vite.dev). The home page ships no J
 |---|---|
 | `index.html` | The site |
 | `404.html` | Served by Netlify for unknown paths |
-| `og-preview/`, `security-headers/`, `agent-readability/`, `favicon-checker/` | The tool pages. Each `main.ts` reads `?url=` and calls the API of the same name under `/api/` |
+| `og-preview.html`, `security-headers.html`, `agent-readability.html`, `favicon-checker.html` | The tool pages, served without `.html`. Each script in the folder of the same name, like `og-preview/main.ts`, reads `?url=` and calls the API of the same name under `/api/` |
 | `lib/tool.ts` | Browser code the tool pages share: the lookup, the checks list and the definition lists |
 | `netlify/functions/og-preview.ts` | Public API at `/api/og-preview?url=` that fetches a page and returns its tags, the preview fields and the checks |
 | `netlify/functions/security-headers.ts` | Public API at `/api/security-headers?url=` that fetches a page, and its `http://` address, and checks the response headers and the Content-Security-Policy |
