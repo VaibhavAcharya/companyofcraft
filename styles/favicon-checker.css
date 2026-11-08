@@ -76,7 +76,7 @@
 
 .icon-missing {
   display: block;
-  border: 1px dashed var(--color-muted);
+  border: 1px dashed var(--muted-foreground);
 }
 
 /* Icon list */
@@ -96,11 +96,11 @@
   display: grid;
   place-items: center;
   height: 88px;
-  border: 1px solid var(--color-line);
+  border: 1px solid var(--border);
   border-radius: 0.5em;
   background:
-    repeating-conic-gradient(var(--color-chip) 0 25%, transparent 0 50%) 0 0 /
-    16px 16px;
+    repeating-conic-gradient(var(--muted) 0 25%, transparent 0 50%) 0 0 / 16px
+    16px;
 }
 
 .icon-image {
@@ -112,14 +112,14 @@
 .icon figcaption {
   display: grid;
   margin-top: 0.5em;
-  color: var(--color-muted);
+  color: var(--muted-foreground);
   overflow-wrap: anywhere;
 }
 
 .icon figcaption code {
-  color: var(--color-fg);
+  color: var(--foreground);
 }
 
 .icon-broken .icon-frame {
-  border-color: var(--color-missing);
+  border-color: var(--destructive);
 }
