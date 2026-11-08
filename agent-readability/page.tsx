@@ -1,14 +1,16 @@
+import { RobotIcon } from "@phosphor-icons/react/ssr";
 import { About, AlsoBuilds, ToolPage } from "../lib/layout.tsx";
 import {
   type Check,
   CheckList,
+  Columns,
   Empty,
   Faq,
   Fetched,
   File,
   Heading,
   LookupForm,
-  Status,
+  LookupStatus,
   Summary,
   useLookup,
 } from "../lib/tool.tsx";
@@ -24,7 +26,7 @@ type Report = {
 const TOOL = "agent-readability";
 
 export default function AgentReadability() {
-  const { query, status, result } = useLookup<Report>(
+  const lookup = useLookup<Report>(
     TOOL,
     "Too many checks. Try again in a minute.",
   );
@@ -33,20 +35,32 @@ export default function AgentReadability() {
       page={TOOL}
       title="Agent readability checker"
       tagline="Check if AI agents and crawlers can find and read a page."
+      frame="Check a page"
+      note="Fetched without running scripts. Nothing is stored."
+      tool={
+        <>
+          <LookupForm
+            action={`/${TOOL}`}
+            name="url"
+            label="Link"
+            button="Check"
+            query={lookup.query}
+            icon={<RobotIcon />}
+            placeholder="example.com"
+            inputMode="url"
+            autoComplete="url"
+            required
+          />
+          <LookupStatus
+            lookup={lookup}
+            action={`/${TOOL}`}
+            name="url"
+            examples={["stateofpixel.com", "github.com", "netlify.com"]}
+          />
+          {lookup.result && <Results report={lookup.result} />}
+        </>
+      }
     >
-      <LookupForm
-        action={`/${TOOL}`}
-        name="url"
-        label="Link"
-        button="Check"
-        query={query}
-        placeholder="example.com"
-        inputMode="url"
-        autoComplete="url"
-        required
-      />
-      <Status>{status}</Status>
-      {result && <Results report={result} />}
       <Faq
         tool={TOOL}
         questions={[
@@ -115,19 +129,27 @@ export default function AgentReadability() {
 
 function Results({ report }: { report: Report }) {
   return (
-    <div>
-      <Fetched tool={TOOL} status={report.status} url={report.url} />
-      <Summary checks={report.checks} />
-      <Heading>Checks</Heading>
-      <CheckList checks={report.checks} />
-      <Heading>AI crawlers</Heading>
-      <CheckList
-        checks={report.crawlers.map((crawler) => ({
-          ok: crawler.allowed,
-          label: crawler.name,
-          detail: `${crawler.allowed ? "Allowed" : "Blocked"}. ${crawler.owner}`,
-        }))}
-      />
+    <div className="mt-8">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <Summary checks={report.checks} />
+        <Fetched tool={TOOL} status={report.status} url={report.url} />
+      </div>
+      <Columns>
+        <div>
+          <Heading>Checks</Heading>
+          <CheckList checks={report.checks} />
+        </div>
+        <div>
+          <Heading>AI crawlers</Heading>
+          <CheckList
+            checks={report.crawlers.map((crawler) => ({
+              ok: crawler.allowed,
+              label: crawler.name,
+              detail: `${crawler.allowed ? "Allowed" : "Blocked"}. ${crawler.owner}`,
+            }))}
+          />
+        </div>
+      </Columns>
       <Heading>llms.txt</Heading>
       {report.llmsTxt === null ? (
         <Empty>No llms.txt on this site.</Empty>

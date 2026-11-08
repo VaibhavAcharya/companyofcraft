@@ -1,15 +1,18 @@
+import { LinkSimpleIcon } from "@phosphor-icons/react/ssr";
 import { type ReactNode, useState } from "react";
 import { About, AlsoBuilds, ToolPage } from "../lib/layout.tsx";
 import {
   type Check,
   CheckList,
+  Columns,
   DefinitionList,
   Empty,
   Faq,
   Fetched,
   Heading,
   LookupForm,
-  Status,
+  LookupStatus,
+  Summary,
   useLookup,
 } from "../lib/tool.tsx";
 
@@ -32,7 +35,7 @@ type Preview = {
 const TOOL = "og-preview";
 
 export default function OgPreview() {
-  const { query, status, result } = useLookup<Preview>(
+  const lookup = useLookup<Preview>(
     TOOL,
     "Too many previews. Try again in a minute.",
   );
@@ -41,20 +44,32 @@ export default function OgPreview() {
       page={TOOL}
       title="Open Graph preview"
       tagline="See how a link looks when you share it on X, LinkedIn, Slack and Discord."
+      frame="Preview a link"
+      note="Fetched from our server. Nothing is stored."
+      tool={
+        <>
+          <LookupForm
+            action={`/${TOOL}`}
+            name="url"
+            label="Link"
+            button="Preview"
+            query={lookup.query}
+            icon={<LinkSimpleIcon />}
+            placeholder="example.com"
+            inputMode="url"
+            autoComplete="url"
+            required
+          />
+          <LookupStatus
+            lookup={lookup}
+            action={`/${TOOL}`}
+            name="url"
+            examples={["stateofpixel.com", "github.com", "netlify.com"]}
+          />
+          {lookup.result && <Results preview={lookup.result} />}
+        </>
+      }
     >
-      <LookupForm
-        action={`/${TOOL}`}
-        name="url"
-        label="Link"
-        button="Preview"
-        query={query}
-        placeholder="example.com"
-        inputMode="url"
-        autoComplete="url"
-        required
-      />
-      <Status>{status}</Status>
-      {result && <Results preview={result} />}
       <Faq
         tool={TOOL}
         questions={[
@@ -131,8 +146,8 @@ function Text({
 
 function Figure({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <figure className="preview">
-      <figcaption className="mb-2 text-muted-foreground text-sm">
+    <figure className="preview min-w-0 rounded-xl border bg-muted/40 p-4 sm:p-5">
+      <figcaption className="mb-3 font-medium text-muted-foreground text-xs uppercase tracking-wide">
         {label}
       </figcaption>
       {children}
@@ -162,9 +177,12 @@ function Results({ preview }: { preview: Preview }) {
   const large = preview.card !== "summary";
 
   return (
-    <div>
-      <Fetched tool={TOOL} status={preview.status} url={preview.url} />
-      <div className="previews mt-6 grid gap-8">
+    <div className="mt-8">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <Summary checks={preview.checks} />
+        <Fetched tool={TOOL} status={preview.status} url={preview.url} />
+      </div>
+      <div className="previews mt-6 grid gap-4 lg:grid-cols-2">
         <Figure label="X">
           <div>
             <div className={`x ${large ? "x-large" : "x-small"}`}>
@@ -219,14 +237,20 @@ function Results({ preview }: { preview: Preview }) {
           </div>
         </Figure>
       </div>
-      <Heading>Checks</Heading>
-      <CheckList checks={preview.checks} />
-      <Heading>Tags</Heading>
-      {preview.tags.length === 0 ? (
-        <Empty>No og: or twitter: tags on this page.</Empty>
-      ) : (
-        <DefinitionList pairs={preview.tags} />
-      )}
+      <Columns>
+        <div>
+          <Heading>Checks</Heading>
+          <CheckList checks={preview.checks} />
+        </div>
+        <div>
+          <Heading>Tags</Heading>
+          {preview.tags.length === 0 ? (
+            <Empty>No og: or twitter: tags on this page.</Empty>
+          ) : (
+            <DefinitionList pairs={preview.tags} />
+          )}
+        </div>
+      </Columns>
     </div>
   );
 }

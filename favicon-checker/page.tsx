@@ -1,15 +1,17 @@
+import { AppWindowIcon } from "@phosphor-icons/react/ssr";
 import type { ReactNode } from "react";
 import { About, AlsoBuilds, ToolPage } from "../lib/layout.tsx";
 import {
   type Check,
   CheckList,
+  Columns,
   DefinitionList,
   Empty,
   Faq,
   Fetched,
   Heading,
   LookupForm,
-  Status,
+  LookupStatus,
   Summary,
   useLookup,
 } from "../lib/tool.tsx";
@@ -39,7 +41,7 @@ type Report = {
 const TOOL = "favicon-checker";
 
 export default function FaviconChecker() {
-  const { query, status, result } = useLookup<Report>(
+  const lookup = useLookup<Report>(
     TOOL,
     "Too many checks. Try again in a minute.",
   );
@@ -48,20 +50,32 @@ export default function FaviconChecker() {
       page={TOOL}
       title="Favicon checker"
       tagline="Check the favicon, apple-touch-icon and web manifest of any page."
+      frame="Check a page"
+      note="Fetched from our server. Nothing is stored."
+      tool={
+        <>
+          <LookupForm
+            action={`/${TOOL}`}
+            name="url"
+            label="Link"
+            button="Check"
+            query={lookup.query}
+            icon={<AppWindowIcon />}
+            placeholder="example.com"
+            inputMode="url"
+            autoComplete="url"
+            required
+          />
+          <LookupStatus
+            lookup={lookup}
+            action={`/${TOOL}`}
+            name="url"
+            examples={["stateofpixel.com", "github.com", "netlify.com"]}
+          />
+          {lookup.result && <Results report={lookup.result} />}
+        </>
+      }
     >
-      <LookupForm
-        action={`/${TOOL}`}
-        name="url"
-        label="Link"
-        button="Check"
-        query={query}
-        placeholder="example.com"
-        inputMode="url"
-        autoComplete="url"
-        required
-      />
-      <Status>{status}</Status>
-      {result && <Results report={result} />}
       <Faq
         tool={TOOL}
         questions={[
@@ -207,8 +221,8 @@ function IconFigure({ icon }: { icon: Icon }) {
 
 function Figure({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <figure>
-      <figcaption className="mb-2 text-muted-foreground text-sm">
+    <figure className="preview min-w-0 rounded-xl border bg-muted/40 p-4 sm:p-5">
+      <figcaption className="mb-3 font-medium text-muted-foreground text-xs uppercase tracking-wide">
         {label}
       </figcaption>
       {children}
@@ -218,9 +232,12 @@ function Figure({ label, children }: { label: string; children: ReactNode }) {
 
 function Results({ report }: { report: Report }) {
   return (
-    <div>
-      <Fetched tool={TOOL} status={report.status} url={report.url} />
-      <div className="mt-6 grid gap-8">
+    <div className="mt-8">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <Summary checks={report.checks} />
+        <Fetched tool={TOOL} status={report.status} url={report.url} />
+      </div>
+      <div className="mt-6 grid gap-4 lg:grid-cols-2">
         <Figure label="Browser tab">
           <div className="tabs">
             <Tab report={report} theme="light" />
@@ -239,9 +256,20 @@ function Results({ report }: { report: Report }) {
           </div>
         </Figure>
       </div>
-      <Summary checks={report.checks} />
-      <Heading>Checks</Heading>
-      <CheckList checks={report.checks} />
+      <Columns>
+        <div>
+          <Heading>Checks</Heading>
+          <CheckList checks={report.checks} />
+        </div>
+        <div>
+          <Heading>Web manifest</Heading>
+          {report.manifest.length === 0 ? (
+            <Empty>No web manifest on this page.</Empty>
+          ) : (
+            <DefinitionList pairs={report.manifest} />
+          )}
+        </div>
+      </Columns>
       <Heading>Icons</Heading>
       {report.icons.length === 0 ? (
         <Empty>No icons found.</Empty>
@@ -251,12 +279,6 @@ function Results({ report }: { report: Report }) {
             <IconFigure key={`${icon.source} ${icon.href}`} icon={icon} />
           ))}
         </div>
-      )}
-      <Heading>Web manifest</Heading>
-      {report.manifest.length === 0 ? (
-        <Empty>No web manifest on this page.</Empty>
-      ) : (
-        <DefinitionList pairs={report.manifest} />
       )}
     </div>
   );

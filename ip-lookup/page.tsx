@@ -1,6 +1,7 @@
 import type { Icon } from "@phosphor-icons/react";
 import {
   CheckCircleIcon,
+  GlobeIcon,
   RobotIcon,
   WarningIcon,
   XCircleIcon,
@@ -20,13 +21,15 @@ import {
 import { track } from "../lib/analytics.ts";
 import { About, AlsoBuilds, ToolPage } from "../lib/layout.tsx";
 import {
+  Columns,
   DefinitionList,
   Empty,
   Faq,
   File,
   Heading,
+  type Lookup,
   LookupForm,
-  Status,
+  LookupStatus,
 } from "../lib/tool.tsx";
 import type { highlight } from "./highlight.ts";
 import {
@@ -101,20 +104,24 @@ type Report = {
   signals: string[];
 };
 
-type Lookup = { ip: string; status: string; report?: Report };
-
 function useIpLookup() {
-  const [lookup, setLookup] = useState<Lookup>({ ip: "", status: "" });
+  const [lookup, setLookup] = useState<Lookup<Report>>({
+    query: "",
+    state: "idle",
+    message: "",
+  });
 
   useEffect(() => {
     const ip = new URLSearchParams(location.search).get("ip")?.trim() ?? "";
     setLookup({
-      ip,
-      status: ip ? `Looking up ${ip}...` : "Finding your IP...",
+      query: ip,
+      state: "loading",
+      message: ip ? `Looking up ${ip}...` : "Finding your IP...",
     });
     load(ip).then(
-      (report) => setLookup({ ip, status: "", report }),
-      (error: Error) => setLookup({ ip, status: error.message }),
+      (result) => setLookup({ query: ip, state: "done", message: "", result }),
+      (error: Error) =>
+        setLookup({ query: ip, state: "error", message: error.message }),
     );
   }, []);
 
@@ -138,26 +145,40 @@ async function load(ip: string): Promise<Report> {
 }
 
 export default function IpLookup() {
-  const { ip, status, report } = useIpLookup();
+  const lookup = useIpLookup();
   return (
     <ToolPage
       page={TOOL}
       title="IP lookup"
       tagline="See what a website can tell from an IP address: where it is, whose network it is on, and whether it looks like a VPN, a bot or an AI crawler."
+      frame="Look up an IP"
+      note="Leave it empty to see your own. Nothing is stored."
+      tool={
+        <>
+          <LookupForm
+            action={`/${TOOL}`}
+            name="ip"
+            label="IP address"
+            button="Look up"
+            icon={<GlobeIcon />}
+            query={lookup.query}
+            placeholder="Any IP, like 8.8.8.8"
+            inputMode="text"
+            autoComplete="off"
+            spellCheck={false}
+          />
+          <LookupStatus
+            lookup={lookup}
+            action={`/${TOOL}`}
+            name="ip"
+            examples={["8.8.8.8", "1.1.1.1", "66.249.66.1"]}
+          />
+          {lookup.result && (
+            <Results report={lookup.result} self={lookup.query === ""} />
+          )}
+        </>
+      }
     >
-      <LookupForm
-        action={`/${TOOL}`}
-        name="ip"
-        label="IP address"
-        button="Look up"
-        query={ip}
-        placeholder="Any IP, like 8.8.8.8"
-        inputMode="text"
-        autoComplete="off"
-        spellCheck={false}
-      />
-      <Status>{status}</Status>
-      {report && <Results report={report} self={ip === ""} />}
       <Faq
         tool={TOOL}
         questions={[
@@ -318,35 +339,37 @@ function CopyButton({ label, text }: { label: string; text: () => string }) {
 function Results({ report, self }: { report: Report; self: boolean }) {
   const { label, variant, icon: VerdictIcon } = VERDICTS[report.verdict];
   return (
-    <div>
-      <Card className="mt-6 p-5">
-        <div className="flex items-start justify-between gap-4">
-          <div className="min-w-0">
-            <p className="text-muted-foreground text-sm">
-              {self ? "Your IP address" : "IP address"}
-            </p>
-            <p className="wrap-anywhere font-heading font-semibold text-3xl tracking-tight sm:text-4xl">
-              {report.ip}
-            </p>
-            {report.hostname && (
-              <p className="mt-1 wrap-anywhere text-muted-foreground text-sm">
-                {report.hostname}
+    <div className="mt-8">
+      <div className="grid gap-3 lg:grid-cols-[3fr_2fr]">
+        <Card className="p-5">
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <p className="text-muted-foreground text-sm">
+                {self ? "Your IP address" : "IP address"}
               </p>
-            )}
+              <p className="wrap-anywhere font-heading font-semibold text-3xl tracking-tight sm:text-4xl">
+                {report.ip}
+              </p>
+              {report.hostname && (
+                <p className="mt-1 wrap-anywhere text-muted-foreground text-sm">
+                  {report.hostname}
+                </p>
+              )}
+            </div>
+            <CopyButton label="Copy" text={() => report.ip} />
           </div>
-          <CopyButton label="Copy" text={() => report.ip} />
+          <Badge className="mt-4 self-start" variant={variant} size="lg">
+            <VerdictIcon weight="bold" />
+            {label}
+          </Badge>
+          <WorldMap report={report} />
+        </Card>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+          <LocationTile report={report} self={self} />
+          <NetworkTile report={report} />
+          <ProxyTile report={report} />
+          <BotTile report={report} />
         </div>
-        <Badge className="mt-4 self-start" variant={variant} size="lg">
-          <VerdictIcon weight="bold" />
-          {label}
-        </Badge>
-        <WorldMap report={report} />
-      </Card>
-      <div className="mt-3 grid grid-cols-2 gap-3 max-sm:grid-cols-1">
-        <LocationTile report={report} self={self} />
-        <NetworkTile report={report} />
-        <ProxyTile report={report} />
-        <BotTile report={report} />
       </div>
       <Views report={report} />
     </div>
@@ -603,12 +626,12 @@ function Views({ report }: { report: Report }) {
   );
 }
 
-function Section({ title, children }: { title: string; children: ReactNode }) {
+function Group({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <>
+    <div>
       <Heading>{title}</Heading>
       {children}
-    </>
+    </div>
   );
 }
 
@@ -631,15 +654,15 @@ function Details({
     ],
   ].filter((pair): pair is [string, string] => pair[1] !== null);
   return (
-    <div className="[&>h2:first-child]:mt-4">
-      <Section title="Location">
+    <Columns>
+      <Group title="Location">
         {place.length === 0 ? (
           <Empty>No location for this IP.</Empty>
         ) : (
           <DefinitionList pairs={place} />
         )}
-      </Section>
-      <Section title="Network">
+      </Group>
+      <Group title="Network">
         {network === null ? (
           <Empty>No network found for this IP.</Empty>
         ) : (
@@ -652,9 +675,9 @@ function Details({
             ]}
           />
         )}
-      </Section>
+      </Group>
       {userAgent !== null && (
-        <Section title="Request">
+        <Group title="Request">
           <DefinitionList
             pairs={[
               ["User agent", userAgent || "None"],
@@ -664,8 +687,8 @@ function Details({
               ],
             ]}
           />
-        </Section>
+        </Group>
       )}
-    </div>
+    </Columns>
   );
 }

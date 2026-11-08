@@ -1,14 +1,16 @@
+import { ShieldCheckIcon } from "@phosphor-icons/react/ssr";
 import { About, AlsoBuilds, ToolPage } from "../lib/layout.tsx";
 import {
   type Check,
   CheckList,
+  Columns,
   DefinitionList,
   Empty,
   Faq,
   Fetched,
   Heading,
   LookupForm,
-  Status,
+  LookupStatus,
   Summary,
   useLookup,
 } from "../lib/tool.tsx";
@@ -24,7 +26,7 @@ type Report = {
 const TOOL = "security-headers";
 
 export default function SecurityHeaders() {
-  const { query, status, result } = useLookup<Report>(
+  const lookup = useLookup<Report>(
     TOOL,
     "Too many checks. Try again in a minute.",
   );
@@ -33,20 +35,32 @@ export default function SecurityHeaders() {
       page={TOOL}
       title="Security headers checker"
       tagline="Check the Content-Security-Policy and security headers of any page."
+      frame="Check a page"
+      note="Fetched from our server. Nothing is stored."
+      tool={
+        <>
+          <LookupForm
+            action={`/${TOOL}`}
+            name="url"
+            label="Link"
+            button="Check"
+            query={lookup.query}
+            icon={<ShieldCheckIcon />}
+            placeholder="example.com"
+            inputMode="url"
+            autoComplete="url"
+            required
+          />
+          <LookupStatus
+            lookup={lookup}
+            action={`/${TOOL}`}
+            name="url"
+            examples={["stateofpixel.com", "github.com", "netlify.com"]}
+          />
+          {lookup.result && <Results report={lookup.result} />}
+        </>
+      }
     >
-      <LookupForm
-        action={`/${TOOL}`}
-        name="url"
-        label="Link"
-        button="Check"
-        query={query}
-        placeholder="example.com"
-        inputMode="url"
-        autoComplete="url"
-        required
-      />
-      <Status>{status}</Status>
-      {result && <Results report={result} />}
       <Faq
         tool={TOOL}
         questions={[
@@ -111,19 +125,27 @@ export default function SecurityHeaders() {
 
 function Results({ report }: { report: Report }) {
   return (
-    <div>
-      <Fetched tool={TOOL} status={report.status} url={report.url} />
-      <Summary checks={report.checks} />
-      <Heading>Checks</Heading>
-      <CheckList checks={report.checks} />
-      <Heading>Content-Security-Policy</Heading>
-      {report.policy.length === 0 ? (
-        <Empty>No Content-Security-Policy on this page.</Empty>
-      ) : (
-        <DefinitionList pairs={report.policy} />
-      )}
-      <Heading>Response headers</Heading>
-      <DefinitionList pairs={report.headers} />
+    <div className="mt-8">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <Summary checks={report.checks} />
+        <Fetched tool={TOOL} status={report.status} url={report.url} />
+      </div>
+      <Columns>
+        <div>
+          <Heading>Checks</Heading>
+          <CheckList checks={report.checks} />
+        </div>
+        <div>
+          <Heading>Content-Security-Policy</Heading>
+          {report.policy.length === 0 ? (
+            <Empty>No Content-Security-Policy on this page.</Empty>
+          ) : (
+            <DefinitionList pairs={report.policy} />
+          )}
+          <Heading>Response headers</Heading>
+          <DefinitionList pairs={report.headers} />
+        </div>
+      </Columns>
     </div>
   );
 }

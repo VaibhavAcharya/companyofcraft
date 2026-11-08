@@ -1,20 +1,40 @@
-import { CaretDownIcon, CheckIcon, XIcon } from "@phosphor-icons/react/ssr";
+import {
+  CaretDownIcon,
+  CheckIcon,
+  WarningCircleIcon,
+  XIcon,
+} from "@phosphor-icons/react/ssr";
 import { Fragment, type ReactNode, useEffect, useState } from "react";
-import { Button, cn, Input } from "uiofcraft";
+import {
+  Alert,
+  AlertTitle,
+  Badge,
+  Button,
+  cn,
+  Input,
+  Meter,
+  MeterIndicator,
+  MeterLabel,
+  MeterTrack,
+  Skeleton,
+} from "uiofcraft";
 import { track } from "./analytics.ts";
+import { Section } from "./layout.tsx";
 
 export type Check = { ok: boolean; label: string; detail: string };
 
 export type Lookup<Result> = {
   query: string;
-  status: string;
+  state: "idle" | "loading" | "error" | "done";
+  message: string;
   result?: Result;
 };
 
 export function useLookup<Result>(tool: string, tooMany: string) {
   const [lookup, setLookup] = useState<Lookup<Result>>({
     query: "",
-    status: "",
+    state: "idle",
+    message: "",
   });
 
   useEffect(() => {
@@ -22,10 +42,15 @@ export function useLookup<Result>(tool: string, tooMany: string) {
     if (!url) {
       return;
     }
-    setLookup({ query: url, status: "Fetching the page..." });
+    setLookup({
+      query: url,
+      state: "loading",
+      message: "Fetching the page...",
+    });
     load<Result>(tool, url, tooMany).then(
-      (result) => setLookup({ query: url, status: "", result }),
-      (error: Error) => setLookup({ query: url, status: error.message }),
+      (result) => setLookup({ query: url, state: "done", message: "", result }),
+      (error: Error) =>
+        setLookup({ query: url, state: "error", message: error.message }),
     );
   }, [tool, tooMany]);
 
@@ -56,6 +81,7 @@ export function LookupForm({
   name,
   label,
   button,
+  icon,
   query,
   ...input
 }: {
@@ -63,6 +89,7 @@ export function LookupForm({
   name: string;
   label: string;
   button: string;
+  icon: ReactNode;
   query: string;
   placeholder: string;
   inputMode: "url" | "text";
@@ -71,19 +98,23 @@ export function LookupForm({
   required?: boolean;
 }) {
   return (
-    <form className="mt-6 flex gap-2" method="get" action={action}>
+    <form className="flex gap-2 max-sm:flex-col" method="get" action={action}>
       <label className="sr-only" htmlFor={name}>
         {label}
       </label>
-      <Input
-        key={query}
-        id={name}
-        name={name}
-        type="text"
-        size="lg"
-        defaultValue={query}
-        {...input}
-      />
+      <div className="relative flex-1 [&>svg]:pointer-events-none [&>svg]:absolute [&>svg]:top-1/2 [&>svg]:left-3 [&>svg]:z-10 [&>svg]:size-4 [&>svg]:-translate-y-1/2 [&>svg]:text-muted-foreground">
+        {icon}
+        <Input
+          key={query}
+          className="*:data-[slot=input]:ps-9"
+          id={name}
+          name={name}
+          type="text"
+          size="lg"
+          defaultValue={query}
+          {...input}
+        />
+      </div>
       <Button type="submit" size="lg">
         {button}
       </Button>
@@ -91,20 +122,76 @@ export function LookupForm({
   );
 }
 
-export function Status({ children }: { children: string }) {
+export function LookupStatus<Result>({
+  lookup,
+  action,
+  name,
+  examples,
+}: {
+  lookup: Lookup<Result>;
+  action: string;
+  name: string;
+  examples: string[];
+}) {
+  if (lookup.state === "idle") {
+    return (
+      <p className="mt-4 flex flex-wrap items-center gap-1.5 text-muted-foreground text-sm">
+        <span className="mr-1">Try</span>
+        {examples.map((example) => [
+          " ",
+          <Badge
+            key={example}
+            variant="outline"
+            size="lg"
+            render={
+              <a
+                href={`${action}?${new URLSearchParams({ [name]: example })}`}
+              />
+            }
+          >
+            {example}
+          </Badge>,
+        ])}
+      </p>
+    );
+  }
+  if (lookup.state === "loading") {
+    return (
+      <div className="mt-8 space-y-6" role="status" aria-live="polite">
+        <span className="sr-only">{lookup.message}</span>
+        <Skeleton className="h-4 w-1/3" />
+        <div className="grid gap-6 lg:grid-cols-2">
+          <Skeleton className="h-40" />
+          <Skeleton className="h-40" />
+        </div>
+        <Skeleton className="h-4 w-2/3" />
+        <Skeleton className="h-4 w-1/2" />
+      </div>
+    );
+  }
+  if (lookup.state === "error") {
+    return (
+      <Alert className="mt-6" variant="error" role="status" aria-live="polite">
+        <WarningCircleIcon />
+        <AlertTitle>{lookup.message}</AlertTitle>
+      </Alert>
+    );
+  }
+  return null;
+}
+
+export function Columns({ children }: { children: ReactNode }) {
   return (
-    <p
-      className="mt-4 text-muted-foreground empty:hidden"
-      role="status"
-      aria-live="polite"
-    >
-      {children}
-    </p>
+    <div className="grid gap-x-12 lg:grid-cols-2 [&>*]:min-w-0">{children}</div>
   );
 }
 
 export function Heading({ children }: { children: ReactNode }) {
-  return <h2 className="mt-10 mb-3 font-semibold">{children}</h2>;
+  return (
+    <h2 className="mt-10 mb-3 font-heading font-semibold text-lg">
+      {children}
+    </h2>
+  );
 }
 
 export function Empty({ children }: { children: ReactNode }) {
@@ -121,7 +208,7 @@ export function Fetched({
   url: string;
 }) {
   return (
-    <p className="mt-6 break-all text-muted-foreground text-sm">
+    <p className="break-all text-muted-foreground text-sm">
       {status}{" "}
       <a
         className="underline"
@@ -139,9 +226,22 @@ export function Fetched({
 export function Summary({ checks }: { checks: Check[] }) {
   const passed = checks.filter((check) => check.ok).length;
   return (
-    <p className="mt-6 font-semibold">
-      {passed} of {checks.length} checks pass
-    </p>
+    <Meter
+      className="max-w-sm"
+      value={checks.length ? (passed / checks.length) * 100 : 0}
+    >
+      <MeterLabel>
+        {passed} of {checks.length} checks pass
+      </MeterLabel>
+      <MeterTrack className="rounded-full">
+        <MeterIndicator
+          className={cn(
+            "rounded-full",
+            passed === checks.length ? "bg-success" : "bg-warning",
+          )}
+        />
+      </MeterTrack>
+    </Meter>
   );
 }
 
@@ -218,9 +318,8 @@ export function Faq({
   questions: [string, ReactNode][];
 }) {
   return (
-    <section className="mt-12">
-      <h2 className="font-semibold">Questions</h2>
-      <div className="mt-2 border-t text-sm">
+    <Section title="Questions">
+      <div className="border-t">
         {questions.map(([question, answer]) => (
           <details
             key={question}
@@ -231,16 +330,16 @@ export function Faq({
               }
             }}
           >
-            <summary className="flex cursor-pointer list-none items-start justify-between gap-4 rounded-md py-3 font-medium outline-none focus-visible:ring-[3px] focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
+            <summary className="flex cursor-pointer list-none items-start justify-between gap-4 rounded-md py-4 font-medium outline-none focus-visible:ring-[3px] focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
               {question}
-              <CaretDownIcon className="size-4 shrink-0 translate-y-0.5 opacity-80 transition-transform duration-200 group-open:rotate-180" />
+              <CaretDownIcon className="size-4 shrink-0 translate-y-1 opacity-80 transition-transform duration-200 group-open:rotate-180" />
             </summary>
-            <p className="pb-4 text-muted-foreground [&_a]:underline">
+            <p className="max-w-2xl pb-5 text-muted-foreground [&_a]:underline">
               {answer}
             </p>
           </details>
         ))}
       </div>
-    </section>
+    </Section>
   );
 }
