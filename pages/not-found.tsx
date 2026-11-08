@@ -6,7 +6,7 @@ export default function NotFound() {
       <main className="grid w-full max-w-2xl grid-cols-[auto_1fr] items-start gap-8 self-center justify-self-center text-lg sm:text-xl max-sm:grid-cols-1 max-sm:justify-items-center max-sm:gap-6 max-sm:text-center">
         <Mark className="block h-auto w-24" size={200} />
         <div>
-          <h1 className="font-heading font-semibold">
+          <h1 className="font-heading font-semibold text-2xl sm:text-3xl">
             <a className="hover:underline" href="/">
               Company of Craft
             </a>
