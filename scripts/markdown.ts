@@ -1,5 +1,4 @@
 import { existsSync } from "node:fs";
-import { readFile } from "node:fs/promises";
 import rehypeParse from "rehype-parse";
 import rehypeRemark from "rehype-remark";
 import remarkStringify from "remark-stringify";
@@ -26,18 +25,18 @@ export function pagePath(markdownFile: string): string | undefined {
   return existsSync(htmlFile(path)) ? path : undefined;
 }
 
-function htmlFile(path: string): string {
+export function htmlFile(path: string): string {
   return path === "/" ? "index.html" : `${path.slice(1)}.html`;
 }
 
-export async function pageMarkdown(path: string): Promise<string> {
+export async function pageMarkdown(html: string): Promise<string> {
   const processor = unified()
     .use(rehypeParse)
     .use(selectMain)
     .use(rehypeRemark)
     .use(absoluteLinks)
     .use(remarkStringify, { bullet: "-", rule: "-" });
-  return String(await processor.process(await readFile(htmlFile(path))));
+  return String(await processor.process(html));
 }
 
 function selectMain() {
@@ -67,8 +66,14 @@ function find(node: HastNode, tagName: string): HastNode | undefined {
 function clean(node: HastNode) {
   const children = (node.children ?? []).filter(
     (child) =>
-      !DROPPED.has(child.tagName ?? "") && child.properties?.hidden !== true,
+      child.type !== "comment" &&
+      !DROPPED.has(child.tagName ?? "") &&
+      child.properties?.hidden !== true,
   );
+  if (node.tagName === "pre") {
+    node.children = children;
+    return;
+  }
   for (const child of children) {
     if (child.type === "text") {
       child.value = child.value?.replace(/\s+/g, " ");

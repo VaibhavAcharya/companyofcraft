@@ -13,7 +13,6 @@
     <link rel="icon" href="/logos/mark.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/logos/apple-touch-icon.png" />
     <link rel="stylesheet" href="/styles/main.css" />
-    <link rel="stylesheet" href="/styles/tool.css" />
 
     <meta property="og:site_name" content="Company of Craft" />
     <meta property="og:type" content="website" />
@@ -91,74 +90,10 @@
         ]
       }
     </script>
-    <script type="module" src="/security-headers/main.ts"></script>
+    <script type="module" src="/security-headers/main.tsx"></script>
     <script defer src="https://umami.vaibhavacharya.com/script.js" data-website-id="f9d87d87-187e-4dc2-840b-6b1a671ddb23" data-domains="companyofcraft.com" data-performance="true"></script>
   </head>
-  <body class="tool">
-    <main>
-      <header>
-        <nav>
-          <a class="home" href="/">
-            <picture>
-              <source srcset="/logos/mark-dark.svg" media="(prefers-color-scheme: dark)" />
-              <img src="/logos/mark.svg" alt="" width="24" height="24" />
-            </picture>
-            Company of Craft
-          </a>
-        </nav>
-        <h1>Security headers checker</h1>
-        <p class="tagline">Check the Content-Security-Policy and security headers of any page.</p>
-      </header>
-
-      <form class="lookup" method="get" action="/security-headers">
-        <label class="visually-hidden" for="url">Link</label>
-        <input id="url" name="url" type="text" inputmode="url" autocomplete="url" placeholder="example.com" required />
-        <button type="submit">Check</button>
-      </form>
-
-      <p class="status" role="status" aria-live="polite"></p>
-      <div class="results" hidden></div>
-
-      <section class="faq">
-        <h2>Questions</h2>
-        <details>
-          <summary>What do security headers do?</summary>
-          <p>They are HTTP response headers that tell the browser what a page may do: where scripts can load from, whether other sites can put it in a frame, and whether to always use HTTPS. They protect visitors from attacks like cross-site scripting and clickjacking.</p>
-        </details>
-        <details>
-          <summary>What is a good first Content-Security-Policy?</summary>
-          <p>Start with <code>default-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'</code> and add the hosts your page loads from. Send it as <code>Content-Security-Policy-Report-Only</code> first, check the browser console for blocked requests, then switch to <code>Content-Security-Policy</code>.</p>
-        </details>
-        <details>
-          <summary>Why is 'unsafe-inline' a problem?</summary>
-          <p>It lets every inline script run, including one an attacker injects. Give the inline scripts you need a nonce or a hash instead. When a nonce or a hash is in <code>script-src</code>, browsers ignore <code>'unsafe-inline'</code>.</p>
-        </details>
-        <details>
-          <summary>Does a Content-Security-Policy in a meta tag work?</summary>
-          <p>Most of it does. Browsers ignore <code>frame-ancestors</code>, <code>report-uri</code> and <code>sandbox</code> in a meta tag, so send those in the header.</p>
-        </details>
-        <details>
-          <summary>Are the links I check saved?</summary>
-          <p>No. The page is fetched when you press Check, and nothing is stored.</p>
-        </details>
-      </section>
-
-      <section class="about">
-        <h2>How it works</h2>
-        <p>The page at the link is fetched from our server, once at its address and once over <code>http://</code> to see if it redirects to HTTPS. The checks read the response headers and any Content-Security-Policy in a <code>&lt;meta&gt;</code> tag. When both are set, the browser applies both, so the checks read them together.</p>
-        <p>The checks cover the headers most sites need. A page can pass all of them and still have other security problems.</p>
-        <p>Company of Craft also builds <a class="chip" href="https://stateofpixel.com" data-umami-event="Outbound link" data-umami-event-target="stateofpixel" data-umami-event-page="security-headers" target="_blank" rel="noopener"><img src="/logos/stateofpixel.svg" alt="" width="18" height="18" />stateofpixel</a>, which catches UI regressions before they merge.</p>
-      </section>
-    </main>
-    <footer>
-      <div>
-        <p>Founded by <a class="chip" href="https://vaibhavacharya.com" data-umami-event="Outbound link" data-umami-event-target="vaibhavacharya" data-umami-event-page="security-headers" target="_blank" rel="noopener"><img src="/logos/vaibhavacharya.svg" alt="" width="18" height="18" />Vaibhav Acharya</a></p>
-        <p>&copy; 2026 Company of Craft</p>
-      </div>
-      <div>
-        <p><a class="chip" href="https://x.com/CompanyofCraft" data-umami-event="Outbound link" data-umami-event-target="x" data-umami-event-page="security-headers" target="_blank" rel="noopener"><img src="/logos/x.svg" alt="" width="18" height="18" />@CompanyofCraft</a></p>
-        <p><a class="chip" href="mailto:hello@companyofcraft.com" data-umami-event="Outbound link" data-umami-event-target="email" data-umami-event-page="security-headers">hello@companyofcraft.com</a></p>
-      </div>
-    </footer>
+  <body>
+    <div id="root"><!--prerender /security-headers/page.tsx--></div>
   </body>
 </html>

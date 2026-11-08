@@ -4,7 +4,7 @@ import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
 import { Resvg } from "@resvg/resvg-js";
 import satori from "satori";
-import { markdownPath, pageMarkdown } from "./markdown.ts";
+import { htmlFile, markdownPath, pageMarkdown } from "./markdown.ts";
 
 const SITE_URL = "https://companyofcraft.com";
 const OUT_DIR = "dist";
@@ -18,7 +18,7 @@ const PAGES = [
     path: "/",
     title: "Company of Craft",
     tagline: "Well-made software.",
-    sources: ["index.html", "styles/main.css"],
+    sources: ["index.html", "pages/home.tsx", "styles/main.css"],
   },
   {
     path: "/og-preview",
@@ -30,13 +30,13 @@ const PAGES = [
     path: "/security-headers",
     title: "Security headers checker",
     tagline: "Check the Content-Security-Policy and headers of any page.",
-    sources: ["security-headers", "styles/tool.css"],
+    sources: ["security-headers", "lib/tool.tsx"],
   },
   {
     path: "/agent-readability",
     title: "Agent readability checker",
     tagline: "Check if AI agents and crawlers can read a page.",
-    sources: ["agent-readability", "styles/tool.css"],
+    sources: ["agent-readability", "lib/tool.tsx"],
   },
   {
     path: "/favicon-checker",
@@ -89,15 +89,15 @@ async function renderPng(
   height: number,
 ): Promise<Buffer> {
   const [regular, semibold] = await Promise.all([
-    font("@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff"),
-    font("@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-600-normal.woff"),
+    font("@fontsource/dm-sans/files/dm-sans-latin-400-normal.woff"),
+    font("@fontsource/dm-sans/files/dm-sans-latin-600-normal.woff"),
   ]);
   const svg = await satori(card as never, {
     width,
     height,
     fonts: [
-      { name: "IBM Plex Sans", data: regular, weight: 400 },
-      { name: "IBM Plex Sans", data: semibold, weight: 600 },
+      { name: "DM Sans", data: regular, weight: 400 },
+      { name: "DM Sans", data: semibold, weight: 600 },
     ],
   });
   return new Resvg(svg).render().asPng();
@@ -115,7 +115,7 @@ async function renderOgImage(page: (typeof PAGES)[number]): Promise<Buffer> {
       alignItems: "center",
       justifyContent: "center",
       background: "#0a0a0a",
-      fontFamily: "IBM Plex Sans",
+      fontFamily: "DM Sans",
       color: "#ededed",
       letterSpacing: "-0.02em",
     },
@@ -149,7 +149,7 @@ async function renderXBanner(): Promise<Buffer> {
       justifyContent: "center",
       gap: 48,
       background: "#0a0a0a",
-      fontFamily: "IBM Plex Sans",
+      fontFamily: "DM Sans",
       color: "#ededed",
       letterSpacing: "-0.02em",
     },
@@ -210,9 +210,10 @@ await writeFile(join(OUT_DIR, "og/x-banner.png"), await renderXBanner());
 console.log(`Wrote the X banner to ${OUT_DIR}/og/x-banner.png`);
 
 for (const page of PAGES) {
+  const html = await readFile(join(OUT_DIR, htmlFile(page.path)), "utf8");
   await writeFile(
     join(OUT_DIR, markdownPath(page.path)),
-    await pageMarkdown(page.path),
+    await pageMarkdown(html),
   );
 }
 console.log(`Wrote ${PAGES.length} Markdown pages to ${OUT_DIR}`);
